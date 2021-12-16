@@ -59,14 +59,80 @@ function isValidPrice(price) {
     return res;
 }
 
-// TODO: define method for getting prices
-app.get('/all');
+// TODO: define what methods to access prices
 
-app.get('/price/exchange/:exchange');
+// sorting not working properly with too much data???
+app.get('/price/all', (req, res) => {
+    Price.find({}).sort('-date').exec((err, prices) => {
+        if (err) {
+            console.log(err);
+            res.status(500).send({ statusCode: 500, message: 'DB error' });
+        } else {
+            res.status(200).send(prices);
+        }
+    });
+});
 
-app.get('/price/crypto/:crypto');
+app.get('/price/exchange/:exchange', (req, res) => {
+    const exchange = req.params.exchange;
+    if (!EXCHANGES.includes(exchange)) {
+        res.status(404).send({ statusCode: 404, message: 'exchange not found' });
+    } else {
+        Price.find({ 'exchange': exchange }).sort('-date').exec((err, prices) => {
+            if (err) {
+                console.log(err);
+                res.status(500).send({ statusCode: 500, message: 'DB error' });
+            } else {
+                res.status(200).send(prices);
+            }
+        });
+    }
+});
 
-app.get('/price/date/:date');
+app.get('/price/crypto/:crypto', (req, res) => {
+    const crypto = req.params.crypto;
+    if (!CRYPTOS.includes(crypto)) {
+        res.status(404).send({ statusCode: 404, message: 'crypto not found' });
+    } else {
+        Price.find({ 'crypto': crypto }).sort('-date').exec((err, prices) => {
+            if (err) {
+                console.log(err);
+                res.status(500).send({ statusCode: 500, message: 'DB error' });
+            } else {
+                res.status(200).send(prices);
+            }
+        });
+    }
+});
+
+app.get('/price/crypto/:crypto/operation/:operation/exchange/:exchange', (req, res) => {
+    const crypto = req.params.crypto;
+    const exchange = req.params.exchange;
+    const operation = req.params.operation;
+    if (!CRYPTOS.includes(crypto)) {
+        res.status(404).send({ statusCode: 404, message: 'crypto not found' });
+    } else if (!EXCHANGES.includes(exchange)) {
+        res.status(404).send({ statusCode: 404, message: 'exchange not found' });
+    } else if (!OPERATIONS.includes(operation)) {
+        res.status(404).send({ statusCode: 404, message: 'operation not found' });
+    } else {
+        Price.find({ 'exchange': exchange, 'crypto': crypto, 'operation': operation }).sort('-date').exec((err, prices) => {
+            if (err) {
+                console.log(err);
+                res.status(500).send({ statusCode: 500, message: 'DB error' });
+            } else {
+                res.status(200).send(prices);
+            }
+        });
+    }
+});
+
+/*
+// maybe useful for placing news?
+app.get('/price/date/:date', (req, res) => {
+    
+});
+*/
 
 app.listen(PORT, () => {
     console.log('Data adapter layer listening on port ' + PORT);
