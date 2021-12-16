@@ -1,8 +1,9 @@
 class Price {
-    constructor(exchange, coin, price, data) {
+    constructor(exchange, crypto, price, operation, data) {
         this.exchange = exchange;
-        this.coin = coin;
+        this.crypto = crypto;
         this.price = price;
+        this.operation = operation;
         this.data = data;
     }
 }
