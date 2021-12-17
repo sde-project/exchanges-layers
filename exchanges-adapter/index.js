@@ -35,15 +35,15 @@ function getBuyPrices(crypto) {
                     //console.log('-> got buy price on coinbase for ' + crypto + ' at ' + coinbasePrice.price + '$');
                     //console.log('-> got buy price on ftx for ' + crypto + ' at ' + ftxPrice.price + '$');
                     //console.log('-> got buy price on crypto for ' + crypto + ' at ' + cryptoPrice.price + '$');
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', krakenPrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', krakenPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', coinbasePrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', coinbasePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
                 });
             break;
@@ -55,9 +55,9 @@ function getBuyPrices(crypto) {
                 .then(([binancePrice, ftxPrice]) => {
                     //console.log('-> got buy price on binance for ' + crypto + ' at ' + binancePrice.price + '$');
                     //console.log('-> got buy price on ftx for ' + crypto + ' at ' + ftxPrice.price + '$');
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
                 });
             break;
@@ -73,13 +73,13 @@ function getBuyPrices(crypto) {
                     //console.log('-> got buy price on binance for ' + crypto + ' at ' + binancePrice.price + '$');
                     //console.log('-> got buy price on ftx for ' + crypto + ' at ' + ftxPrice.price + '$');
                     //console.log('-> got buy price on crypto for ' + crypto + ' at ' + cryptoPrice.price + '$');
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', krakenPrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', krakenPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
                 });
             break;
@@ -95,13 +95,13 @@ function getBuyPrices(crypto) {
                     //console.log('-> got buy price on coinbase for ' + crypto + ' at ' + coinbasePrice.price + '$');
                     //console.log('-> got buy price on ftx for ' + crypto + ' at ' + ftxPrice.price + '$');
                     //console.log('-> got buy price on crypto for ' + crypto + ' at ' + cryptoPrice.price + '$');
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', coinbasePrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', coinbasePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
                 });
             break;
@@ -113,9 +113,9 @@ function getBuyPrices(crypto) {
                 .then(([binancePrice, cryptoPrice]) => {
                     //console.log('-> got buy price on binance for ' + crypto + ' at ' + binancePrice.price + '$');
                     //console.log('-> got buy price on crypto for ' + crypto + ' at ' + cryptoPrice.price + '$');
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
                 });
             break;
@@ -145,15 +145,15 @@ function getSellPrices(crypto) {
                     //console.log('-> got sell price on coinbase for ' + crypto + ' at ' + coinbasePrice.price + '$');
                     //console.log('-> got sell price on ftx for ' + crypto + ' at ' + ftxPrice.price + '$');
                     //console.log('-> got sell price on crypto for ' + crypto + ' at ' + cryptoPrice.price + '$');
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', krakenPrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', krakenPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', coinbasePrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', coinbasePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
                 });
             break;
@@ -165,9 +165,9 @@ function getSellPrices(crypto) {
                 .then(([binancePrice, ftxPrice]) => {
                     //console.log('-> got sell price on binance for ' + crypto + ' at ' + binancePrice.price + '$');
                     //console.log('-> got sell price on ftx for ' + crypto + ' at ' + ftxPrice.price + '$');
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
                 });
             break;
@@ -183,13 +183,13 @@ function getSellPrices(crypto) {
                     //console.log('-> got sell price on binance for ' + crypto + ' at ' + binancePrice.price + '$');
                     //console.log('-> got sell price on ftx for ' + crypto + ' at ' + ftxPrice.price + '$');
                     //console.log('-> got sell price on crypto for ' + crypto + ' at ' + cryptoPrice.price + '$');
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', krakenPrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', krakenPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
                 });
             break;
@@ -205,13 +205,13 @@ function getSellPrices(crypto) {
                     //console.log('-> got sell price on coinbase for ' + crypto + ' at ' + coinbasePrice.price + '$');
                     //console.log('-> got sell price on ftx for ' + crypto + ' at ' + ftxPrice.price + '$');
                     //console.log('-> got sell price on crypto for ' + crypto + ' at ' + cryptoPrice.price + '$');
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', coinbasePrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', coinbasePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
                 });
             break;
@@ -223,9 +223,9 @@ function getSellPrices(crypto) {
                 .then(([binancePrice, cryptoPrice]) => {
                     //console.log('-> got sell price on binance for ' + crypto + ' at ' + binancePrice.price + '$');
                     //console.log('-> got sell price on crypto for ' + crypto + ' at ' + cryptoPrice.price + '$');
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
-                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'authorization': process.env.DATA_ADAPTER_KEY } })
+                    axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
                         .catch(e => console.log(e));
                 });
             break;
@@ -251,12 +251,12 @@ function getAllPrices() {
     getAllSellPrices();
 }
 
-// get crypto prices every minute
-setInterval(getAllPrices, 60 * 1000);
+// get crypto prices every 1 minute
+setInterval(getAllPrices, 1 * 60 * 1000);
 
 // API_KEY validation for requests to this service
 app.use((req, res, next) => {
-    if (req.header('authorization') !== process.env.EXCHANGES_ADAPTER_KEY) {
+    if (req.header('Authorization') !== process.env.EXCHANGES_ADAPTER_KEY) {
         return res.status(401).send({ statusCode: 401, message: "unauthorized" });
     } else {
         next();

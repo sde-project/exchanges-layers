@@ -12,6 +12,9 @@ const EXCHANGES = ['Kraken', 'Binance', 'Coinbase', 'FTX', 'Crypto.com'];
 const CRYPTOS = ['BTC', 'ETH', 'BNB', 'SOL', 'DOGE', 'XRP', 'DOT', 'AVAX', 'LTC', 'LUNA'];
 const OPERATIONS = ['buy', 'sell'];
 
+// not sure about this
+const TIME_OFFSET = 3660000;
+
 mongoose.connect(process.env.DB_URL,
     () => {
         console.log('Connected to mongodb');
@@ -20,7 +23,7 @@ mongoose.connect(process.env.DB_URL,
 );
 
 app.use((req, res, next) => {
-    if (req.header('authorization') !== process.env.DB_ADAPTER_KEY) {
+    if (req.header('Authorization') !== process.env.DB_ADAPTER_KEY) {
         return res.status(401).send({ statusCode: 401, message: "unauthorized" });
     } else {
         next();
@@ -61,7 +64,7 @@ function isValidPrice(price) {
 
 // TODO: define what methods to access prices
 
-// sorting not working properly with too much data???
+// BUG: sorting not working properly with too much data???
 app.get('/price/all', (req, res) => {
     Price.find({}).sort('-date').exec((err, prices) => {
         if (err) {
@@ -127,12 +130,21 @@ app.get('/price/crypto/:crypto/operation/:operation/exchange/:exchange', (req, r
     }
 });
 
-/*
-// maybe useful for placing news?
-app.get('/price/date/:date', (req, res) => {
-    
+app.get('/price/since/:date', (req, res) => {
+    var date = Date.parse(req.params.date);
+    if (!isNaN(date)) {
+        Price.find({ 'date': {$gte: date, $lt: Date.now()+TIME_OFFSET } }).sort('-date').exec((err, prices) => {
+            if (err) {
+                console.log(err);
+                res.status(500).send({ statusCode: 500, message: 'DB error' });
+            } else {
+                res.status(200).send(prices);
+            }
+        });
+    } else {
+        res.status(400).send({ statusCode: 400, message: 'Invalid date' });
+    } 
 });
-*/
 
 app.listen(PORT, () => {
     console.log('Data adapter layer listening on port ' + PORT);
