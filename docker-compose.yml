@@ -1,0 +1,30 @@
+version: "3"
+networks:
+  exchanges:
+volumes:
+  mongodata:
+services:
+  mongo:
+    image: mongo:4.2.18-rc0-bionic
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodata:/data/db
+    networks:
+      - exchanges
+  data-adapter:
+    build: ./data-adapter
+    depends_on: 
+      - mongo
+    ports:
+      - 2901:2091
+    networks:
+      - exchanges
+  exchanges-adapter:
+    build: ./exchanges-adapter
+    depends_on:
+      - data-adapter
+    ports:
+      - 2900:2900
+    networks:
+      - exchanges
