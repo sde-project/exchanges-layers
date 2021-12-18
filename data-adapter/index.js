@@ -27,7 +27,6 @@ mongoose.connect(process.env.DB_URL,
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-/*
 app.use((req, res, next) => {
     if (req.header('Authorization') !== process.env.DB_ADAPTER_KEY) {
         return res.status(401).send({ statusCode: 401, message: "unauthorized" });
@@ -35,7 +34,6 @@ app.use((req, res, next) => {
         next();
     }
 });
-*/
 
 app.use(express.json());
 
