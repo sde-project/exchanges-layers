@@ -15,6 +15,9 @@ const OPERATIONS = ['buy', 'sell'];
 // not sure about this
 const TIME_OFFSET = 3660000;
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+
 mongoose.connect(process.env.DB_URL,
     () => {
         console.log('Connected to mongodb');
@@ -22,6 +25,9 @@ mongoose.connect(process.env.DB_URL,
     e => console.log(e)
 );
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+/*
 app.use((req, res, next) => {
     if (req.header('Authorization') !== process.env.DB_ADAPTER_KEY) {
         return res.status(401).send({ statusCode: 401, message: "unauthorized" });
@@ -29,6 +35,7 @@ app.use((req, res, next) => {
         next();
     }
 });
+*/
 
 app.use(express.json());
 
@@ -37,7 +44,7 @@ app.post('/price', (req, res) => {
         var price = new Price(req.body);
         price.save()
             .then(price => {
-                res.status(200).send({ statusCode: 200, message: "price saved succesfully" });
+                res.status(201).send({ statusCode: 200, message: "price saved succesfully" });
             })
             .catch(err => {
                 console.log(err);
@@ -76,50 +83,21 @@ app.get('/price/all', (req, res) => {
     });
 });
 
-app.get('/price/exchange/:exchange', (req, res) => {
-    const exchange = req.params.exchange;
-    if (!EXCHANGES.includes(exchange)) {
-        res.status(404).send({ statusCode: 404, message: 'exchange not found' });
-    } else {
-        Price.find({ 'exchange': exchange }).sort('-date').exec((err, prices) => {
-            if (err) {
-                console.log(err);
-                res.status(500).send({ statusCode: 500, message: 'DB error' });
-            } else {
-                res.status(200).send(prices);
-            }
-        });
-    }
-});
-
-app.get('/price/crypto/:crypto', (req, res) => {
-    const crypto = req.params.crypto;
-    if (!CRYPTOS.includes(crypto)) {
-        res.status(404).send({ statusCode: 404, message: 'crypto not found' });
-    } else {
-        Price.find({ 'crypto': crypto }).sort('-date').exec((err, prices) => {
-            if (err) {
-                console.log(err);
-                res.status(500).send({ statusCode: 500, message: 'DB error' });
-            } else {
-                res.status(200).send(prices);
-            }
-        });
-    }
-});
-
-app.get('/price/crypto/:crypto/operation/:operation/exchange/:exchange', (req, res) => {
+app.get('/price/crypto/:crypto/since/:date/operation/:operation/exchange/:exchange', (req, res) => {
     const crypto = req.params.crypto;
     const exchange = req.params.exchange;
     const operation = req.params.operation;
+    const date = Date.parse(req.params.date);
     if (!CRYPTOS.includes(crypto)) {
         res.status(404).send({ statusCode: 404, message: 'crypto not found' });
     } else if (!EXCHANGES.includes(exchange)) {
         res.status(404).send({ statusCode: 404, message: 'exchange not found' });
     } else if (!OPERATIONS.includes(operation)) {
         res.status(404).send({ statusCode: 404, message: 'operation not found' });
+    } else if (isNaN(date)){
+        res.status(400).send({ statusCode: 400, message: 'invalid date' });
     } else {
-        Price.find({ 'exchange': exchange, 'crypto': crypto, 'operation': operation }).sort('-date').exec((err, prices) => {
+        Price.find({ 'exchange': exchange, 'crypto': crypto, 'operation': operation, 'date': {$gte: date, $lt: Date.now()+TIME_OFFSET } }).sort('-date').exec((err, prices) => {
             if (err) {
                 console.log(err);
                 res.status(500).send({ statusCode: 500, message: 'DB error' });
@@ -131,7 +109,7 @@ app.get('/price/crypto/:crypto/operation/:operation/exchange/:exchange', (req, r
 });
 
 app.get('/price/since/:date', (req, res) => {
-    var date = Date.parse(req.params.date);
+    const date = Date.parse(req.params.date);
     if (!isNaN(date)) {
         Price.find({ 'date': {$gte: date, $lt: Date.now()+TIME_OFFSET } }).sort('-date').exec((err, prices) => {
             if (err) {
@@ -142,7 +120,7 @@ app.get('/price/since/:date', (req, res) => {
             }
         });
     } else {
-        res.status(400).send({ statusCode: 400, message: 'Invalid date' });
+        res.status(400).send({ statusCode: 400, message: 'invalid date' });
     } 
 });
 
