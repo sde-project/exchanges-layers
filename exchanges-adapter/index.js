@@ -251,8 +251,10 @@ function getAllPrices() {
     getAllSellPrices();
 }
 
-// get crypto prices every 1 minute
-setInterval(getAllPrices, 1 * 60 * 1000);
+const TIMER = process.env.TIMER || 5 * 60 * 1000;
+
+// get crypto prices every 5 minute
+setInterval(getAllPrices, TIMER);
 
 // API_KEY validation for requests to this service
 app.use((req, res, next) => {

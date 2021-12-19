@@ -27,7 +27,7 @@ mongoose.connect(process.env.DB_URL,
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-/*
+
 app.use((req, res, next) => {
     if (req.header('Authorization') !== process.env.DB_ADAPTER_KEY) {
         return res.status(401).send({ statusCode: 401, message: "unauthorized" });
@@ -35,7 +35,7 @@ app.use((req, res, next) => {
         next();
     }
 });
-*/
+
 
 app.use(express.json());
 
@@ -73,7 +73,7 @@ function isValidPrice(price) {
 
 // BUG: sorting not working properly with too much data???
 app.get('/price/all', (req, res) => {
-    Price.find({}).sort('-date').exec((err, prices) => {
+    Price.find({}).sort('date').exec((err, prices) => {
         if (err) {
             console.log(err);
             res.status(500).send({ statusCode: 500, message: 'DB error' });
@@ -97,7 +97,7 @@ app.get('/price/crypto/:crypto/since/:date/operation/:operation/exchange/:exchan
     } else if (isNaN(date)){
         res.status(400).send({ statusCode: 400, message: 'invalid date' });
     } else {
-        Price.find({ 'exchange': exchange, 'crypto': crypto, 'operation': operation, 'date': {$gte: date, $lt: Date.now()+TIME_OFFSET } }).sort('-date').exec((err, prices) => {
+        Price.find({ 'exchange': exchange, 'crypto': crypto, 'operation': operation, 'date': {$gte: date, $lt: Date.now()+TIME_OFFSET } }).sort('date').exec((err, prices) => {
             if (err) {
                 console.log(err);
                 res.status(500).send({ statusCode: 500, message: 'DB error' });
@@ -111,7 +111,7 @@ app.get('/price/crypto/:crypto/since/:date/operation/:operation/exchange/:exchan
 app.get('/price/since/:date', (req, res) => {
     const date = Date.parse(req.params.date);
     if (!isNaN(date)) {
-        Price.find({ 'date': {$gte: date, $lt: Date.now()+TIME_OFFSET } }).sort('-date').exec((err, prices) => {
+        Price.find({ 'date': {$gte: date, $lt: Date.now()+TIME_OFFSET } }).sort('date').exec((err, prices) => {
             if (err) {
                 console.log(err);
                 res.status(500).send({ statusCode: 500, message: 'DB error' });
