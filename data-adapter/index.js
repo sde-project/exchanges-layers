@@ -108,6 +108,28 @@ app.get('/price/crypto/:crypto/since/:date/operation/:operation/exchange/:exchan
     }
 });
 
+app.get('/price/crypto/:crypto/latest/operation/:operation/exchange/:exchange/', (req, res) => {
+    const crypto = req.params.crypto;
+    const exchange = req.params.exchange;
+    const operation = req.params.operation;
+    if (!CRYPTOS.includes(crypto)) {
+        res.status(404).send({ statusCode: 404, message: 'crypto not found' });
+    } else if (!EXCHANGES.includes(exchange)) {
+        res.status(404).send({ statusCode: 404, message: 'exchange not found' });
+    } else if (!OPERATIONS.includes(operation)) {
+        res.status(404).send({ statusCode: 404, message: 'operation not found' });
+    } else {
+        Price.findOne({ 'exchange': exchange, 'crypto': crypto, 'operation': operation }).sort('-date').exec((err, price) => {
+            if (err) {
+                console.log(err);
+                res.status(500).send({ statusCode: 500, message: 'DB error' });
+            } else {
+                res.status(200).send(price);
+            }
+        });
+    }
+});
+
 app.get('/price/since/:date', (req, res) => {
     const date = Date.parse(req.params.date);
     if (!isNaN(date)) {

@@ -1,0 +1,152 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "description": "Exchanges Business Logic APIs",
+      "version": "1.0.0",
+      "title": "Exchanges Business Logic",
+      "contact": {
+        "email": "eh@volevi.com"
+      }
+    },
+    "host": "localhost:2902",
+    "basePath": "/",
+    "tags": [
+      {
+        "name": "exchanges",
+        "description": "APIs for getting exchanges data"
+      }
+    ],
+    "schemes": [
+      "http"
+    ],
+    "paths": {
+      "/exchange/best/operation/{operation}/crypto/{crypto}": {
+        "get": {
+          "tags": [
+            "exchanges"
+          ],
+          "summary": "gets the best exchange to buy or sell a crypto",
+          "description": "gets the best exchange to buy or sell a crypto",
+          "operationId": "getBest",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "Authorization",
+              "in": "header",
+              "description": "API key",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "crypto",
+              "in": "path",
+              "description": "crypto to get prices for",
+              "required": true,
+              "type": "string",
+              "enum": [
+                "BTC",
+                "ETH",
+                "BNB",
+                "SOL",
+                "DOGE",
+                "XRP",
+                "DOT",
+                "AVAX",
+                "LTC",
+                "LUNA"
+              ]
+            },
+            {
+              "name": "operation",
+              "in": "path",
+              "description": "operations to get prices for",
+              "required": true,
+              "type": "string",
+              "enum": [
+                "buy",
+                "sell"
+              ]
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "price entry added to database",
+              "schema": {
+                "$ref": "#/definitions/Price"
+              }
+            },
+            "401": {
+              "description": "unathorized"
+            },
+            "404": {
+                "description": "crypto or operation not found"
+            },
+            "500": {
+              "description": "server error on saving the price entry"
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "Price": {
+        "type": "object",
+        "required": [
+          "crypto",
+          "date",
+          "exchange",
+          "operation",
+          "price"
+        ],
+        "properties": {
+          "exchange": {
+            "type": "string",
+            "description": "exchange of the price entry",
+            "enum": [
+              "Binance",
+              "Coinbase",
+              "Crypto.com",
+              "FTX",
+              "Kraken"
+            ]
+          },
+          "crypto": {
+            "type": "string",
+            "description": "crypto-currency of the price entry",
+            "enum": [
+              "BTC",
+              "ETH",
+              "BNB",
+              "SOL",
+              "DOGE",
+              "XRP",
+              "DOT",
+              "AVAX",
+              "LTC",
+              "LUNA"
+            ]
+          },
+          "price": {
+            "type": "number",
+            "description": "the price of the crypto-currency in USD"
+          },
+          "operation": {
+            "type": "string",
+            "description": "specifies if the price is for buying or selling",
+            "enum": [
+              "buy",
+              "sell"
+            ]
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2016-08-29T09:12:33.001+0000",
+            "description": "the date in which the price was observed"
+          }
+        }
+      }
+    }
+  }

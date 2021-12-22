@@ -1,282 +1,184 @@
 {
-    "swagger": "2.0",
-    "info": {
-      "description": "Exchanges Data Adapter APIs",
-      "version": "1.0.0",
-      "title": "Exchanges Data Adapter",
-      "contact": {
-        "email": "eh@volevi.com"
+  "swagger": "2.0",
+  "info": {
+    "description": "Exchanges Data Adapter APIs",
+    "version": "1.0.0",
+    "title": "Exchanges Data Adapter",
+    "contact": {
+      "email": "eh@volevi.com"
+    }
+  },
+  "host": "localhost:2901",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "prices",
+      "description": "APIs for getting and setting prices data"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/price": {
+      "post": {
+        "tags": [
+          "prices"
+        ],
+        "summary": "adds a price entry",
+        "description": "Adds a price entry to the database",
+        "operationId": "addPrice",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "priceEntry",
+            "description": "price entry to add",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Price"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "API key",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "price entry added to database"
+          },
+          "400": {
+            "description": "invalid price entry"
+          },
+          "401": {
+            "description": "unathorized"
+          },
+          "500": {
+            "description": "server error on saving the price entry"
+          }
+        }
       }
     },
-    "host": "localhost:2901",
-    "basePath": "/",
-    "tags": [
-      {
-        "name": "prices",
-        "description": "APIs for getting and setting prices data"
-      }
-    ],
-    "schemes": [
-      "http"
-    ],
-    "paths": {
-      "/price": {
-        "post": {
-          "tags": [
-            "prices"
-          ],
-          "summary": "adds a price entry",
-          "description": "Adds a price entry to the database",
-          "operationId": "addPrice",
-          "consumes": [
-            "application/json"
-          ],
-          "produces": [
-            "application/json"
-          ],
-          "parameters": [
-            {
-              "in": "body",
-              "name": "priceEntry",
-              "description": "price entry to add",
-              "required": true,
-              "schema": {
+    "/price/all": {
+      "get": {
+        "tags": [
+          "prices"
+        ],
+        "summary": "gets all prices entries on the database",
+        "description": "gets all prices entries on the database",
+        "operationId": "getAllPrices",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "API key",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "array of prices entries",
+            "schema": {
+              "type": "array",
+              "items": {
                 "$ref": "#/definitions/Price"
               }
-            },
-            {
-              "name": "Authorization",
-              "in": "header",
-              "description": "API key",
-              "required": true,
-              "type": "string"
             }
-          ],
-          "responses": {
-            "201": {
-              "description": "price entry added to database"
-            },
-            "400": {
-              "description": "invalid price entry"
-            },
-            "401": {
-              "description": "unathorized"
-            },
-            "500": {
-              "description": "server error on saving the price entry"
-            }
-          }
-        }
-      },
-      "/price/all": {
-        "get": {
-          "tags": [
-            "prices"
-          ],
-          "summary": "gets all prices entries on the database",
-          "description": "gets all prices entries on the database",
-          "operationId": "getAllPrices",
-          "produces": [
-            "application/json"
-          ],
-          "parameters": [
-            {
-              "name": "Authorization",
-              "in": "header",
-              "description": "API key",
-              "required": true,
-              "type": "string"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "array of prices entries",
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/definitions/Price"
-                }
-              }
-            },
-            "401": {
-              "description": "unauthorized"
-            },
-            "500": {
-              "description": "database error"
-            }
-          }
-        }
-      },
-      "/price/since/{date}": {
-        "get": {
-          "tags": [
-            "prices"
-          ],
-          "summary": "gets prices entry since a certain date",
-          "description": "gets prices entry since a certain date",
-          "operationId": "getPricesSince",
-          "produces": [
-            "application/json"
-          ],
-          "parameters": [
-            {
-              "name": "Authorization",
-              "in": "header",
-              "description": "API key",
-              "required": true,
-              "type": "string"
-            },
-            {
-              "name": "date",
-              "in": "path",
-              "description": "date since when to get prices",
-              "required": true,
-              "type": "string",
-              "format": "date-time"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "array of prices entries",
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/definitions/Price"
-                }
-              }
-            },
-            "401": {
-              "description": "unauthorized"
-            },
-            "500": {
-              "description": "database error"
-            }
-          }
-        }
-      },
-      "/price/crypto/{crypto}/since/{date}/operation/{operation}/exchange/{exchange}": {
-        "get": {
-          "tags": [
-            "prices"
-          ],
-          "summary": "gets prices entry with filters",
-          "description": "gets prices entry for a certain crypto, since a certain date, for a certain operation, on a certain exchange",
-          "operationId": "getFilteredPrices",
-          "produces": [
-            "application/json"
-          ],
-          "parameters": [
-            {
-              "name": "Authorization",
-              "in": "header",
-              "description": "API key",
-              "required": true,
-              "type": "string"
-            },
-            {
-              "name": "crypto",
-              "in": "path",
-              "description": "crypto to get prices for",
-              "required": true,
-              "type": "string",
-              "enum": [
-                "BTC",
-                "ETH",
-                "BNB",
-                "SOL",
-                "DOGE",
-                "XRP",
-                "DOT",
-                "AVAX",
-                "LTC",
-                "LUNA"
-              ]
-            },
-            {
-              "name": "date",
-              "in": "path",
-              "description": "date since when to get prices",
-              "required": true,
-              "type": "string",
-              "format": "date-time"
-            },
-            {
-              "name": "operation",
-              "in": "path",
-              "description": "operations to get prices for",
-              "required": true,
-              "type": "string",
-              "enum": [
-                "buy",
-                "sell"
-              ]
-            },
-            {
-              "name": "exchange",
-              "in": "path",
-              "description": "exchange to get prices on",
-              "required": true,
-              "type": "string",
-              "enum": [
-                "Binance",
-                "Coinbase",
-                "Crypto.com",
-                "FTX",
-                "Kraken"
-              ]
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "array of prices entries",
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/definitions/Price"
-                }
-              }
-            },
-            "400": {
-                "description": "invalid input (date)"
-              },
-            "401": {
-              "description": "unauthorized"
-            },
-            "404": {
-                "description": "filter not found (crypto, operation, exchange)"
-            },
-            "500": {
-              "description": "database error"
-            }
+          },
+          "401": {
+            "description": "unauthorized"
+          },
+          "500": {
+            "description": "database error"
           }
         }
       }
     },
-    "definitions": {
-      "Price": {
-        "type": "object",
-        "required": [
-          "crypto",
-          "date",
-          "exchange",
-          "operation",
-          "price"
+    "/price/since/{date}": {
+      "get": {
+        "tags": [
+          "prices"
         ],
-        "properties": {
-          "exchange": {
-            "type": "string",
-            "description": "exchange of the price entry",
-            "enum": [
-              "Binance",
-              "Coinbase",
-              "Crypto.com",
-              "FTX",
-              "Kraken"
-            ]
+        "summary": "gets prices entry since a certain date",
+        "description": "gets prices entry since a certain date",
+        "operationId": "getPricesSince",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "API key",
+            "required": true,
+            "type": "string"
           },
-          "crypto": {
+          {
+            "name": "date",
+            "in": "path",
+            "description": "date since when to get prices",
+            "required": true,
             "type": "string",
-            "description": "crypto-currency of the price entry",
+            "format": "date-time"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "array of prices entries",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Price"
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized"
+          },
+          "500": {
+            "description": "database error"
+          }
+        }
+      }
+    },
+    "/price/crypto/{crypto}/since/{date}/operation/{operation}/exchange/{exchange}": {
+      "get": {
+        "tags": [
+          "prices"
+        ],
+        "summary": "gets prices entry with filters",
+        "description": "gets prices entry for a certain crypto, since a certain date, for a certain operation, on a certain exchange",
+        "operationId": "getFilteredPrices",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "API key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "crypto",
+            "in": "path",
+            "description": "crypto to get prices for",
+            "required": true,
+            "type": "string",
             "enum": [
               "BTC",
               "ETH",
@@ -290,25 +192,206 @@
               "LUNA"
             ]
           },
-          "price": {
-            "type": "number",
-            "description": "the price of the crypto-currency in USD"
-          },
-          "operation": {
+          {
+            "name": "date",
+            "in": "path",
+            "description": "date since when to get prices",
+            "required": true,
             "type": "string",
-            "description": "specifies if the price is for buying or selling",
+            "format": "date-time"
+          },
+          {
+            "name": "operation",
+            "in": "path",
+            "description": "operations to get prices for",
+            "required": true,
+            "type": "string",
             "enum": [
               "buy",
               "sell"
             ]
           },
-          "date": {
+          {
+            "name": "exchange",
+            "in": "path",
+            "description": "exchange to get prices on",
+            "required": true,
             "type": "string",
-            "format": "date-time",
-            "example": "2016-08-29T09:12:33.001+0000",
-            "description": "the date in which the price was observed"
+            "enum": [
+              "Binance",
+              "Coinbase",
+              "Crypto.com",
+              "FTX",
+              "Kraken"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "array of prices entries",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Price"
+              }
+            }
+          },
+          "400": {
+            "description": "invalid date"
+          },
+          "401": {
+            "description": "unauthorized"
+          },
+          "404": {
+            "description": "crypto, operation or exchange not found"
+          },
+          "500": {
+            "description": "database error"
+          }
+        }
+      }
+    },
+    "/price/crypto/{crypto}/latest/operation/{operation}/exchange/{exchange}": {
+      "get": {
+        "tags": [
+          "prices"
+        ],
+        "summary": "gets latest price entry",
+        "description": "gets latest price entry for a certain crypto, for a certain operation, on a certain exchange",
+        "operationId": "getLatestPrices",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "API key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "crypto",
+            "in": "path",
+            "description": "crypto to get prices for",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "BTC",
+              "ETH",
+              "BNB",
+              "SOL",
+              "DOGE",
+              "XRP",
+              "DOT",
+              "AVAX",
+              "LTC",
+              "LUNA"
+            ]
+          },
+          {
+            "name": "operation",
+            "in": "path",
+            "description": "operations to get prices for",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "buy",
+              "sell"
+            ]
+          },
+          {
+            "name": "exchange",
+            "in": "path",
+            "description": "exchange to get prices on",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "Binance",
+              "Coinbase",
+              "Crypto.com",
+              "FTX",
+              "Kraken"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "latest price entry",
+            "schema": {
+              "$ref": "#/definitions/Price"
+            }
+          },
+          "401": {
+            "description": "unauthorized"
+          },
+          "404": {
+            "description": "crypto, operation or exchange not found"
+          },
+          "500": {
+            "description": "database error"
           }
         }
       }
     }
+  },
+  "definitions": {
+    "Price": {
+      "type": "object",
+      "required": [
+        "crypto",
+        "date",
+        "exchange",
+        "operation",
+        "price"
+      ],
+      "properties": {
+        "exchange": {
+          "type": "string",
+          "description": "exchange of the price entry",
+          "enum": [
+            "Binance",
+            "Coinbase",
+            "Crypto.com",
+            "FTX",
+            "Kraken"
+          ]
+        },
+        "crypto": {
+          "type": "string",
+          "description": "crypto-currency of the price entry",
+          "enum": [
+            "BTC",
+            "ETH",
+            "BNB",
+            "SOL",
+            "DOGE",
+            "XRP",
+            "DOT",
+            "AVAX",
+            "LTC",
+            "LUNA"
+          ]
+        },
+        "price": {
+          "type": "number",
+          "description": "the price of the crypto-currency in USD"
+        },
+        "operation": {
+          "type": "string",
+          "description": "specifies if the price is for buying or selling",
+          "enum": [
+            "buy",
+            "sell"
+          ]
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2016-08-29T09:12:33.001+0000",
+          "description": "the date in which the price was observed"
+        }
+      }
+    }
   }
+}
