@@ -20,6 +20,14 @@ const swaggerDocument = require('./swagger.json');
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+app.use((req, res, next) => {
+    if (req.header('Authorization') !== process.env.BUSINESS_LOGIC_KEY) {
+        return res.status(401).send({ statusCode: 401, message: "unauthorized" });
+    } else {
+        next();
+    }
+});
+
 app.get('/exchange/best/operation/:operation/crypto/:crypto', (req, res) => {
     const crypto = req.params.crypto;
     const operation = req.params.operation;
