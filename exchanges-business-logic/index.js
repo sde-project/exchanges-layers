@@ -58,7 +58,7 @@ app.get('/exchange/best/operation/:operation/crypto/:crypto', (req, res) => {
                         console.log('Binance ' + operation + ' ' + crypto + ' at ' + latestBinance.price + '$');
                         console.log('FTX ' + operation + ' ' + crypto + ' at ' + latestFTX.price + '$');
                         console.log('Crypto.com ' + operation + ' ' + crypto + ' at ' + latestCrypto.price + '$');
-                        
+
                         if (operation == 'buy') {
                             if (latestBinance.price < bestExchange.price) {
                                 bestExchange = latestBinance;
@@ -88,7 +88,8 @@ app.get('/exchange/best/operation/:operation/crypto/:crypto', (req, res) => {
                         }
 
                         res.status(200).send(bestExchange);
-                    });
+                    })
+                    .catch(e => console.log(e));
                 break;
             case 'BNB':
                 var requests = [];
@@ -102,7 +103,7 @@ app.get('/exchange/best/operation/:operation/crypto/:crypto', (req, res) => {
                         let bestExchange = latestBinance;
                         console.log('Binance ' + operation + ' ' + crypto + ' at ' + latestBinance.price + '$');
                         console.log('FTX ' + operation + ' ' + crypto + ' at ' + latestFTX.price + '$');
-                       
+
                         if (operation == 'buy') {
                             if (latestFTX.price < bestExchange.price) {
                                 bestExchange = latestFTX;
@@ -114,7 +115,8 @@ app.get('/exchange/best/operation/:operation/crypto/:crypto', (req, res) => {
                         }
 
                         res.status(200).send(bestExchange);
-                    });
+                    })
+                    .catch(e => console.log(e));
                 break;
             case 'XRP':
                 var requests = [];
@@ -130,7 +132,7 @@ app.get('/exchange/best/operation/:operation/crypto/:crypto', (req, res) => {
                         console.log('Binance ' + operation + ' ' + crypto + ' at ' + latestBinance.price + '$');
                         console.log('FTX ' + operation + ' ' + crypto + ' at ' + latestFTX.price + '$');
                         console.log('Crypto.com ' + operation + ' ' + crypto + ' at ' + latestCrypto.price + '$');
-                        
+
                         if (operation == 'buy') {
                             if (latestBinance.price < bestExchange.price) {
                                 bestExchange = latestBinance;
@@ -154,7 +156,8 @@ app.get('/exchange/best/operation/:operation/crypto/:crypto', (req, res) => {
                         }
 
                         res.status(200).send(bestExchange);
-                    });
+                    })
+                    .catch(e => console.log(e));
                 break;
             case 'AVAX':
                 var requests = [];
@@ -170,7 +173,7 @@ app.get('/exchange/best/operation/:operation/crypto/:crypto', (req, res) => {
                         console.log('Binance ' + operation + ' ' + crypto + ' at ' + latestBinance.price + '$');
                         console.log('FTX ' + operation + ' ' + crypto + ' at ' + latestFTX.price + '$');
                         console.log('Crypto.com ' + operation + ' ' + crypto + ' at ' + latestCrypto.price + '$');
-                        
+
                         if (operation == 'buy') {
                             if (latestCoinbase.price < bestExchange.price) {
                                 bestExchange = latestCoinbase;
@@ -194,7 +197,8 @@ app.get('/exchange/best/operation/:operation/crypto/:crypto', (req, res) => {
                         }
 
                         res.status(200).send(bestExchange);
-                    });
+                    })
+                    .catch(e => console.log(e));
                 break;
             case 'LUNA':
                 var requests = [];
@@ -208,7 +212,7 @@ app.get('/exchange/best/operation/:operation/crypto/:crypto', (req, res) => {
                         let bestExchange = latestBinance;
                         console.log('Binance ' + operation + ' ' + crypto + ' at ' + latestBinance.price + '$');
                         console.log('Crypto.com ' + operation + ' ' + crypto + ' at ' + latestCrypto.price + '$');
-                        
+
                         if (operation == 'buy') {
                             if (latestCrypto.price < bestExchange.price) {
                                 bestExchange = latestCrypto;
@@ -220,7 +224,8 @@ app.get('/exchange/best/operation/:operation/crypto/:crypto', (req, res) => {
                         }
 
                         res.status(200).send(bestExchange);
-                    });
+                    })
+                    .catch(e => console.log(e));
                 break;
             default:
                 console.log('Crypto not supported yet!');
@@ -228,86 +233,123 @@ app.get('/exchange/best/operation/:operation/crypto/:crypto', (req, res) => {
     }
 });
 
-function createRequest (crypto, operation, exchange) {
+function createRequest(crypto, operation, exchange) {
     return axios.get(process.env.DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/latest/operation/' + operation + '/exchange/' + exchange, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
         .then(response => response.data);
 }
 
-/*
-const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
+const TIME_OFFSET = 3660000;
+const LATEST = 30 * 60 * 1000;
+const THRESHOLD = 0.3;
 
-const fs = require('fs');
+const Notification = require('./model/Notification');
 
-app.get('/exchange/dataset/crypto/:crypto/since/:date/operation/:operation/exchange/:exchange', (req, res) => {
-    const crypto = req.params.crypto;
-    const exchange = req.params.exchange;
-    const operation = req.params.operation;
-    const date = Date.parse(req.params.date);
-    if (!CRYPTOS.includes(crypto)) {
-        res.status(404).send({ statusCode: 404, message: 'crypto not found' });
-    } else if (!EXCHANGES.includes(exchange)) {
-        res.status(404).send({ statusCode: 404, message: 'exchange not found' });
-    } else if (!OPERATIONS.includes(operation)) {
-        res.status(404).send({ statusCode: 404, message: 'operation not found' });
-    } else if (isNaN(date)) {
-        res.status(400).send({ statusCode: 400, message: 'invalid date' });
-    } else {
-        axios.get(process.env.DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/since/' + req.params.date + '/operation/' + operation + '/exchange/' + exchange, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-            .then(prices => prices.data)
-            .then(prices => {
-                var pricesValues = [];
-                var datesLabels = [];
-                prices.forEach(price => {
-                    pricesValues.push(Number(price['price']));
-                    let date = new Date(Date.parse(price['date']));
-                    datesLabels.push(date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' ' + (date.getHours() - 1) + ':' + date.getMinutes() + ':' + date.getSeconds());
-                });
-                var color;
-                switch (exchange) {
-                    case 'Kraken':
-                        color = 'purple';
-                        break;
-                    case 'Binance':
-                        color = 'yellow';
-                        break;
-                    case 'FTX':
-                        color = 'cyan';
-                        break;
-                    case 'Coinbase':
-                        color = 'blue';
-                        break;
-                    case 'Crypto.com':
-                        color = 'navy';
-                        break;
-                    default:
-                        color = 'red';
-                        break;
+function analyzePeak(crypto, operation, exchange) {
+    var getLatest = axios.get(process.env.DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/latest/operation/' + operation + '/exchange/' + exchange, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
+        .then(response => response.data);
+    var date = new Date(Date.now() - LATEST + TIME_OFFSET);
+    var getLatestPeriod = axios.get(process.env.DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/since/' + date.toISOString() + '/operation/' + operation + '/exchange/' + exchange, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
+        .then(response => response.data);
+
+    Promise.all([getLatest, getLatestPeriod])
+        .then(([latestPrice, latestPeriod]) => {
+            if (latestPeriod.length >= 2) {
+                let sum = 0;
+                for (let i = 0; i < (latestPeriod.length - 1); i++) {
+                    sum = sum + latestPeriod[i].price;
                 }
-                const dataset = {
-                    label: 'Prices in $ for ' + operation + 'ing ' + crypto + ' on ' + exchange,
-                    data: pricesValues,
-                    borderColor: color,
-                }
-                res.status(200).send({ statusCode: 200, dataset: dataset, dates: datesLabels });
-            });
-    }
-});
+                let avg = sum / (latestPeriod.length - 1);
 
-const width = 1600;
-const height = 900;
-const backgroundColor = 'white';
-const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, backgroundColor });
-function createPlot(configuration) {
-    const image = chartJSNodeCanvas.renderToBuffer(configuration, 'image/png');
-    fs.writeFile('chart.png', image);
+                // console.log(crypto+' on '+exchange+' for '+operation+': latest price = ' + latestPrice.price + ', avg = ' + avg);
+
+                // send notification when high growth
+                if (latestPrice.price >= avg + avg * THRESHOLD) {
+                    const growth = latestPrice.price / avg * 100;
+                    const title = crypto + ' is flying!';
+                    const body = crypto + ' is +' + growth + '% from last hour moving average, is it time to sell?';
+                    const icon = '';
+                    const notification = new Notification(title, body, icon);
+
+                    axios.post(
+                        process.env.PROCESS_CENTRIC_HOST + '/notification/crypto/' + crypto,
+                        notification,
+                        { headers: { 'Authorization': process.env.PROCESS_CENTRIC_KEY } }
+                    )
+                        .catch(e => {
+                            console.log(e);
+                        });
+                }
+
+                // send notification when high loss
+                if (latestPrice.price <= avg - avg * THRESHOLD) {
+                    const loss = latestPrice.price / avg * 100;
+                    const title = crypto + ' is crashing!';
+                    const body = crypto + ' is -' + loss + '% from last hour moving average, is it time to buy?';
+                    const icon = '';
+                    const notification = new Notification(title, body, icon);
+
+                    axios.post(
+                        process.env.PROCESS_CENTRIC_HOST + '/notification/crypto/' + crypto,
+                        notification,
+                        { headers: { 'Authorization': process.env.PROCESS_CENTRIC_KEY } }
+                    )
+                    .catch(e => {
+                        console.log(e);
+                    });
+                }
+            }
+        })
+        .catch(e => {
+            console.log(e);
+        });
 }
 
-const path = require('path');
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '/prova.html'));
-});
-*/
+function analyzeAllPeaks() {
+    CRYPTOS.forEach(crypto => {
+        switch (crypto) {
+            case 'BNB':
+                OPERATIONS.forEach(operation => {
+                    analyzePeak(crypto, operation, 'Binance');
+                    analyzePeak(crypto, operation, 'FTX');
+                });
+                break;
+            case 'XRP':
+                OPERATIONS.forEach(operation => {
+                    analyzePeak(crypto, operation, 'Binance');
+                    analyzePeak(crypto, operation, 'FTX');
+                    analyzePeak(crypto, operation, 'Crypto.com');
+                    analyzePeak(crypto, operation, 'Kraken');
+                });
+                break;
+            case 'AVAX':
+                OPERATIONS.forEach(operation => {
+                    analyzePeak(crypto, operation, 'Coinbase');
+                    analyzePeak(crypto, operation, 'Binance');
+                    analyzePeak(crypto, operation, 'FTX');
+                    analyzePeak(crypto, operation, 'Crypto.com');
+                });
+                break;
+            case 'LUNA':
+                OPERATIONS.forEach(operation => {
+                    analyzePeak(crypto, operation, 'Binance');
+                    analyzePeak(crypto, operation, 'Crypto.com');
+                });
+                break;
+            default:
+                OPERATIONS.forEach(operation => {
+                    EXCHANGES.forEach(exchange => {
+                        analyzePeak(crypto, operation, exchange);
+                    });
+                });
+                break;
+        }
+    });
+}
+
+const TIMER = process.env.TIMER || 1 * 60 * 1000;
+
+setInterval(analyzeAllPeaks, TIMER);
 
 app.listen(PORT, () => {
     console.log('Exchanges business logic listening on port ' + PORT);
-})
+});

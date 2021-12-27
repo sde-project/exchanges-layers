@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 
-const PORT = process.env.PORT || 2800;
+const PORT = process.env.PORT || 2901;
 
 const mongoose = require('mongoose');
 const Price = require('./model/Price');
@@ -20,7 +20,7 @@ const swaggerDocument = require('./swagger.json');
 
 mongoose.connect(process.env.DB_URL,
     () => {
-        console.log('Connected to mongodb');
+        console.log('Connected to mongodb on '+process.env.DB_URL);
     },
     e => console.log(e)
 );
@@ -42,7 +42,7 @@ app.post('/price', (req, res) => {
         var price = new Price(req.body);
         price.save()
             .then(price => {
-                res.status(201).send({ statusCode: 200, message: "price saved succesfully" });
+                res.status(201).send({ statusCode: 201, message: "price saved succesfully" });
             })
             .catch(err => {
                 console.log(err);
