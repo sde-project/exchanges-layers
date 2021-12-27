@@ -17,7 +17,7 @@ services:
     depends_on: 
       - mongo
     ports:
-      - 2901:2091
+      - 2901:2901
     networks:
       - exchanges
   exchanges-adapter:
@@ -26,5 +26,13 @@ services:
       - data-adapter
     ports:
       - 2900:2900
+    networks:
+      - exchanges
+  exchanges-business-logic:
+    build: ./exchanges-business-logic
+    depends_on:
+      - data-adapter
+    ports:
+      - 2902:2902
     networks:
       - exchanges

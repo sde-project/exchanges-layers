@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const Price = require('./Price');
+const Price = require('../model/Price');
 
 // not sure about this
 const TIME_OFFSET = 3660000;

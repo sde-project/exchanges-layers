@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 2800;
 const axios = require('axios');
 
 const Price = require('./model/Price');
-const RequestManager = require('./model/RequestManager');
+const RequestManager = require('./wrappers/RequestManager');
 const request = new RequestManager();
 
 // List of cryptos (symbols)

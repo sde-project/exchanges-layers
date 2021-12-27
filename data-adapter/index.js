@@ -108,6 +108,32 @@ app.get('/price/crypto/:crypto/since/:date/operation/:operation/exchange/:exchan
     }
 });
 
+app.get('/price/crypto/:crypto/from/:from/to/:to/operation/:operation/exchange/:exchange', (req, res) => {
+    const crypto = req.params.crypto;
+    const exchange = req.params.exchange;
+    const operation = req.params.operation;
+    const from = Date.parse(req.params.from);
+    const to = Date.parse(req.params.to);
+    if (!CRYPTOS.includes(crypto)) {
+        res.status(404).send({ statusCode: 404, message: 'crypto not found' });
+    } else if (!EXCHANGES.includes(exchange)) {
+        res.status(404).send({ statusCode: 404, message: 'exchange not found' });
+    } else if (!OPERATIONS.includes(operation)) {
+        res.status(404).send({ statusCode: 404, message: 'operation not found' });
+    } else if (isNaN(from) || isNaN(to)){
+        res.status(400).send({ statusCode: 400, message: 'invalid date(s)' });
+    } else {
+        Price.find({ 'exchange': exchange, 'crypto': crypto, 'operation': operation, 'date': {$gte: from, $lt: to } }).sort('date').exec((err, prices) => {
+            if (err) {
+                console.log(err);
+                res.status(500).send({ statusCode: 500, message: 'DB error' });
+            } else {
+                res.status(200).send(prices);
+            }
+        });
+    }
+});
+
 app.get('/price/crypto/:crypto/latest/operation/:operation/exchange/:exchange/', (req, res) => {
     const crypto = req.params.crypto;
     const exchange = req.params.exchange;
@@ -143,6 +169,23 @@ app.get('/price/since/:date', (req, res) => {
         });
     } else {
         res.status(400).send({ statusCode: 400, message: 'invalid date' });
+    } 
+});
+
+app.get('/price/from/:from/to/:to', (req, res) => {
+    const from = Date.parse(req.params.from);
+    const to = Date.parse(req.params.to);
+    if (!isNaN(from) && !isNaN(to)) {
+        Price.find({ 'date': {$gte: from, $lt: to } }).sort('date').exec((err, prices) => {
+            if (err) {
+                console.log(err);
+                res.status(500).send({ statusCode: 500, message: 'DB error' });
+            } else {
+                res.status(200).send(prices);
+            }
+        });
+    } else {
+        res.status(400).send({ statusCode: 400, message: 'invalid date(s)' });
     } 
 });
 
