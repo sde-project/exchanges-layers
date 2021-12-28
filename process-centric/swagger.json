@@ -166,11 +166,11 @@
               }
             }
           },
+          "400": {
+            "description": "invalid date"
+          },
           "401": {
             "description": "unathorized"
-          },
-          "404": {
-            "description": "crypto or operation not found"
           },
           "500": {
             "description": "server error on saving the price entry"
@@ -217,11 +217,11 @@
               }
             }
           },
+          "400": {
+            "description": "invalid date(s)"
+          },
           "401": {
             "description": "unathorized"
-          },
-          "404": {
-            "description": "crypto or operation not found"
           },
           "500": {
             "description": "server error on saving the price entry"
