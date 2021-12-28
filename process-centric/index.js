@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 2900;
 const axios = require('axios');
 
 const Price = require('./model/Price');
+const { response } = require('express');
 
 const EXCHANGES = ['Kraken', 'Binance', 'Coinbase', 'FTX', 'Crypto.com'];
 const CRYPTOS = ['BTC', 'ETH', 'BNB', 'SOL', 'DOGE', 'XRP', 'DOT', 'AVAX', 'LTC', 'LUNA'];
@@ -28,20 +29,291 @@ app.post('/notification/crypto/:crypto', (req, res) => {
     } else {
         const notification = req.body;
         const crypto = req.params.crypto;
-        axios
-        .post(
-            process.env.USERS_BUSINESS_LOGIC_HOST+'/devices/notifications/crypto/'+crypto,
-             notification)
-        .catch(e => console.log(e));
+        axios.post(process.env.USERS_BUSINESS_LOGIC_HOST + '/devices/notifications/crypto/' + crypto, notification)
+            .catch(e => console.log(e));
     }
 });
 
 app.get('/exchanges/best', (req, res) => {
+    axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me')
+        .then(response => response.data)
+        .then(user => {
+            var cryptos = user.cryptos;
+            cryptos.forEach(crypto => {
+                requests.push(axios.get(process.env.EXCHANGES_BUSINESS_LOGIC_HOST + '/exchange/best/operation/buy/crypto/' + crypto, { headers: { 'Authorization': process.env.EXCHANGES_BUSINESS_LOGIC_KEY } }).then(response => response.data));
+                requests.push(axios.get(process.env.EXCHANGES_BUSINESS_LOGIC_HOST + '/exchange/best/operation/sell/crypto/' + crypto, { headers: { 'Authorization': process.env.EXCHANGES_BUSINESS_LOGIC_KEY } }).then(response => response.data));
+            });
+            Promise.all(requests)
+                .then(responses => {
+                    responses.forEach(response => {
+                        let crypto = response.crypto;
+                        let operation = response.operation;
 
+                        if (!(crypto in bestExchanges)) {
+                            bestExchanges[crypto] = {};
+                        }
+
+                        bestExchanges[crypto][operation] = { exchange: response.exchange, price: response.price };
+                    });
+                    res.status(200).send(bestExchanges);
+                })
+                .catch(e => {
+                    console.log(e);
+                    res.status(500).send({ statusCode: 500, message: "server error" });
+                });
+        })
+        .catch(e => {
+            console.log(e);
+            res.status(500).send({ statusCode: 500, message: 'server error' })
+        });
 });
 
-app.get('/prices/since/:date', (req, res) => {
+app.get('/price/since/:date', (req, res) => {
+    var dateVal = new Date(Date.parse(req.params.date));
+    var date = dateVal.toISOString();
+    if (isNaN(dateVal)) {
+        res.status(400).send({ statusCode: 400, message: 'invalid date' });
+    } else {
+        axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me')
+            .then(response => response.data)
+            .then(user => {
+                var cryptos = user.cryptos;
+                var requests = [];
+                OPERATIONS.forEach(operation => {
+                    cryptos.forEach(crypto => {
+                        switch (crypto) {
+                            case 'BNB':
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/since/' + date + '/operation/' + operation + '/exchange/Binance', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/since/' + date + '/operation/' + operation + '/exchange/FTX', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                break;
+                            case 'XRP':
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/since/' + date + '/operation/' + operation + '/exchange/Kraken', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/since/' + date + '/operation/' + operation + '/exchange/FTX', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/since/' + date + '/operation/' + operation + '/exchange/Crypto.com', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/since/' + date + '/operation/' + operation + '/exchange/Binance', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                break;
+                            case 'AVAX':
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/since/' + date + '/operation/' + operation + '/exchange/Coinbase', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/since/' + date + '/operation/' + operation + '/exchange/FTX', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/since/' + date + '/operation/' + operation + '/exchange/Crypto.com', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/since/' + date + '/operation/' + operation + '/exchange/Binance', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                break;
+                            case 'LUNA':
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/since/' + date + '/operation/' + operation + '/exchange/Crypto.com', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/since/' + date + '/operation/' + operation + '/exchange/Binance', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                break;
+                            default:
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/since/' + date + '/operation/' + operation + '/exchange/Kraken', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/since/' + date + '/operation/' + operation + '/exchange/FTX', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/since/' + date + '/operation/' + operation + '/exchange/Crypto.com', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/since/' + date + '/operation/' + operation + '/exchange/Binance', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/since/' + date + '/operation/' + operation + '/exchange/Coinbase', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                break;
+                        }
 
+                    });
+                });
+                Promise.all(requests)
+                    .then(responses => {
+                        var allPrices = [];
+                        responses.forEach(response => {
+                            allPrices = allPrices.concat(response);
+                        });
+                        var userPrices = {};
+                        cryptos.forEach(crypto => {
+                            userPrices[crypto] = {};
+                            userPrices[crypto]['buy'] = allPrices.filter(price => price.crypto == crypto && price.operation == 'buy');
+                            userPrices[crypto]['sell'] = allPrices.filter(price => price.crypto == crypto && price.operation == 'sell');
+                        });
+                        res.status(200).send(userPrices);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        res.status(500).send({ statusCode: 500, message: 'server error' });
+                    });
+            })
+            .catch(e => {
+                console.log(e);
+                res.status(500).send({ statusCode: 500, message: 'server error' });
+            })
+
+    }
+});
+
+app.get('/price/from/:from/to/:to', (req, res) => {
+    var fromVal = new Date(Date.parse(req.params.from));
+    var from = fromVal.toISOString();
+    var toVal = new Date(Date.parse(req.params.to));
+    var to = toVal.toISOString();
+    if (isNaN(fromVal) || isNaN(toVal)) {
+        res.status(400).send({ statusCode: 400, message: 'invalid date(s)' });
+    } else {         
+        axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me')
+            .then(response => response.data)
+            .then(user => {
+                var cryptos = user.cryptos;
+                var requests = [];
+                OPERATIONS.forEach(operation => {
+                    cryptos.forEach(crypto => {
+                        switch (crypto) {
+                            case 'BNB':
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/from/' + from + '/to/' + to + '/operation/' + operation + '/exchange/Binance', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/from/' + from + '/to/' + to + '/operation/' + operation + '/exchange/FTX', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                break;
+                            case 'XRP':
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/from/' + from + '/to/' + to + '/operation/' + operation + '/exchange/Kraken', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/from/' + from + '/to/' + to + '/operation/' + operation + '/exchange/FTX', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/from/' + from + '/to/' + to + '/operation/' + operation + '/exchange/Crypto.com', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/from/' + from + '/to/' + to + '/operation/' + operation + '/exchange/Binance', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                break;
+                            case 'AVAX':
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/from/' + from + '/to/' + to + '/operation/' + operation + '/exchange/Coinbase', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/from/' + from + '/to/' + to + '/operation/' + operation + '/exchange/FTX', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/from/' + from + '/to/' + to + '/operation/' + operation + '/exchange/Crypto.com', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/from/' + from + '/to/' + to + '/operation/' + operation + '/exchange/Binance', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                break;
+                            case 'LUNA':
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/from/' + from + '/to/' + to + '/operation/' + operation + '/exchange/Crypto.com', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/from/' + from + '/to/' + to + '/operation/' + operation + '/exchange/Binance', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                break;
+                            default:
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/from/' + from + '/to/' + to + '/operation/' + operation + '/exchange/Kraken', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/from/' + from + '/to/' + to + '/operation/' + operation + '/exchange/FTX', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/from/' + from + '/to/' + to + '/operation/' + operation + '/exchange/Crypto.com', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/from/' + from + '/to/' + to + '/operation/' + operation + '/exchange/Binance', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                requests.push(
+                                    axios.get(process.env.EXCHANGES_DATA_ADAPTER_HOST + '/price/crypto/' + crypto + '/from/' + from + '/to/' + to + '/operation/' + operation + '/exchange/Coinbase', { headers: { 'Authorization': process.env.EXCHANGES_DATA_ADAPTER_KEY } })
+                                        .then(response => response.data)
+                                );
+                                break;
+                        }
+
+                    });
+                });
+                Promise.all(requests)
+                    .then(responses => {
+                        var allPrices = [];
+                        responses.forEach(response => {
+                            allPrices = allPrices.concat(response);
+                        });
+                        var userPrices = {};
+                        cryptos.forEach(crypto => {
+                            userPrices[crypto] = {};
+                            userPrices[crypto]['buy'] = allPrices.filter(price => price.crypto == crypto && price.operation == 'buy');
+                            userPrices[crypto]['sell'] = allPrices.filter(price => price.crypto == crypto && price.operation == 'sell');
+                        });
+                        res.status(200).send(userPrices);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        res.status(500).send({ statusCode: 500, message: 'server error' });
+                    });
+            })
+            .catch(e => {
+                console.log(e);
+                res.status(500).send({ statusCode: 500, message: 'server error' });
+            });
+            
+    }
 });
 
 app.listen(PORT, () => {

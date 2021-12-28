@@ -37,7 +37,7 @@ services:
   process-centric:
     build: ./process-centric
     depends_on:
-      - data_adapter
+      - data-adapter
       - business-logic
     ports:
       - 2900:2900
