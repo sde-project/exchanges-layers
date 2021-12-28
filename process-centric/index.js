@@ -36,6 +36,14 @@ app.post('/notification/crypto/:crypto', (req, res) => {
     }
 });
 
+app.get('/exchanges/best', (req, res) => {
+
+});
+
+app.get('/prices/since/:date', (req, res) => {
+
+});
+
 app.listen(PORT, () => {
     console.log('Exchanges process centric listening on port ' + PORT);
 });

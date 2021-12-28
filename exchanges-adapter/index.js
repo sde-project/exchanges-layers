@@ -266,6 +266,8 @@ app.use((req, res, next) => {
 });
 
 /*
+const PORT = process.env.PORT || 2903;
+
 app.listen(PORT, () => {
     console.log('Exchanges adapter layer listening on port ' + PORT);
 });
