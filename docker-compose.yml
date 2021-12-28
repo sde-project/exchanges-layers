@@ -24,15 +24,22 @@ services:
     build: ./exchanges-adapter
     depends_on:
       - data-adapter
-    ports:
-      - 2900:2900
     networks:
       - exchanges
-  exchanges-business-logic:
-    build: ./exchanges-business-logic
+  business-logic:
+    build: ./business-logic
     depends_on:
       - data-adapter
     ports:
       - 2902:2902
+    networks:
+      - exchanges
+  process-centric:
+    build: ./process-centric
+    depends_on:
+      - data-adapter
+      - business-logic
+    ports:
+      - 2900:2900
     networks:
       - exchanges

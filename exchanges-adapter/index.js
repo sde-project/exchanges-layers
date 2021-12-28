@@ -3,8 +3,6 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 
-const PORT = process.env.PORT || 2800;
-
 const axios = require('axios');
 
 const Price = require('./model/Price');
@@ -235,12 +233,14 @@ function getSellPrices(crypto) {
 }
 
 function getAllBuyPrices() {
+    console.log('getting all buy prices');
     CRYPTOS.forEach(crypto => {
         getBuyPrices(crypto);
     });
 }
 
 function getAllSellPrices() {
+    console.log('getting all sell prices');
     CRYPTOS.forEach(crypto => {
         getSellPrices(crypto);
     });
@@ -251,7 +251,7 @@ function getAllPrices() {
     getAllSellPrices();
 }
 
-const TIMER = process.env.TIMER || 5 * 60 * 1000;
+const TIMER = process.env.TIMER || 1 * 60 * 1000;
 
 // get crypto prices every 5 minute
 setInterval(getAllPrices, TIMER);
@@ -265,6 +265,10 @@ app.use((req, res, next) => {
     }
 });
 
+/*
+const PORT = process.env.PORT || 2903;
+
 app.listen(PORT, () => {
     console.log('Exchanges adapter layer listening on port ' + PORT);
 });
+*/
