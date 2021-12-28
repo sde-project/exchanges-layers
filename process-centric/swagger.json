@@ -1,0 +1,354 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Exchanges Process Centric APIs",
+    "version": "1.0.0",
+    "title": "Exchanges Process Centric",
+    "contact": {
+      "email": "eh@volevi.com"
+    }
+  },
+  "host": "localhost:2900",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "exchanges",
+      "description": "APIs for getting exchanges data"
+    },
+    {
+      "name": "prices",
+      "description": "APIs for getting prices data"
+    },
+    {
+      "name": "notifications",
+      "description": "APISs for notifications about exchanges"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/notification/crypto/{crypto}": {
+      "post": {
+        "tags": [
+          "notifications"
+        ],
+        "summary": "Sends a notification about an exchange",
+        "description": "Sends a notification about an exchange (internally calls the users layers)",
+        "operationId": "sendNotification",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "crypto",
+            "in": "path",
+            "description": "crypto to send notification for",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "BTC",
+              "ETH",
+              "BNB",
+              "SOL",
+              "DOGE",
+              "XRP",
+              "DOT",
+              "AVAX",
+              "LTC",
+              "LUNA"
+            ]
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "API key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "notification",
+            "in": "body",
+            "description": "Notification to send",
+            "required": "true",
+            "schema": {
+              "$ref": "#/definitions/Notification"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "notification sent succesfully"
+          },
+          "401": {
+            "description": "unathorized"
+          },
+          "500": {
+            "description": "server error on sending the notification"
+          }
+        }
+      }
+    },
+    "/exchange/best/{operation}": {
+      "get": {
+        "tags": [
+          "exchanges"
+        ],
+        "summary": "gets the price entries on the best exchange for buying/selling on the cryptos of the user",
+        "description": "gets the price entries on the best exchange for buying/selling on the cryptos of the user",
+        "operationId": "getBest",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "operation",
+            "in": "path",
+            "description": "operations to get prices for",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "buy",
+              "sell"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "price entries on the best exchanges for performing operation on crypto",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Price"
+              }
+            }
+          },
+          "404": {
+            "description": "operation not found"
+          },
+          "500": {
+            "description": "server error on saving the price entry"
+          }
+        }
+      }
+    },
+    "/price/since/{date}": {
+      "get": {
+        "tags": [
+          "prices"
+        ],
+        "summary": "gets the prices entries of the user's crypto since a date",
+        "description": "gets the prices entries of the user's crypto since a date",
+        "operationId": "getPricesSince",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "date",
+            "in": "path",
+            "description": "date since when to get prices",
+            "required": true,
+            "type": "string",
+            "format": "date-time"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "prices entries of the cryptos since the date",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PricesData"
+              }
+            }
+          },
+          "401": {
+            "description": "unathorized"
+          },
+          "404": {
+            "description": "crypto or operation not found"
+          },
+          "500": {
+            "description": "server error on saving the price entry"
+          }
+        }
+      }
+    },
+    "/price/from/{from}/to/{to}": {
+      "get": {
+        "tags": [
+          "prices"
+        ],
+        "summary": "gets the prices entries of the user's crypto in a time interval",
+        "description": "gets the prices entries of the user's crypto in a time interval",
+        "operationId": "getPricesInterval",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "path",
+            "description": "date since when to get prices",
+            "required": true,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "to",
+            "in": "path",
+            "description": "date until when to get prices",
+            "required": true,
+            "type": "string",
+            "format": "date-time"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "prices entries of the cryptos in the interval",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PricesData"
+              }
+            }
+          },
+          "401": {
+            "description": "unathorized"
+          },
+          "404": {
+            "description": "crypto or operation not found"
+          },
+          "500": {
+            "description": "server error on saving the price entry"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Price": {
+      "type": "object",
+      "required": [
+        "crypto",
+        "date",
+        "exchange",
+        "operation",
+        "price"
+      ],
+      "properties": {
+        "exchange": {
+          "type": "string",
+          "description": "exchange of the price entry",
+          "enum": [
+            "Binance",
+            "Coinbase",
+            "Crypto.com",
+            "FTX",
+            "Kraken"
+          ]
+        },
+        "crypto": {
+          "type": "string",
+          "description": "crypto-currency of the price entry",
+          "enum": [
+            "BTC",
+            "ETH",
+            "BNB",
+            "SOL",
+            "DOGE",
+            "XRP",
+            "DOT",
+            "AVAX",
+            "LTC",
+            "LUNA"
+          ]
+        },
+        "price": {
+          "type": "number",
+          "description": "the price of the crypto-currency in USD"
+        },
+        "operation": {
+          "type": "string",
+          "description": "specifies if the price is for buying or selling",
+          "enum": [
+            "buy",
+            "sell"
+          ]
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2016-08-29T09:12:33.001+0000",
+          "description": "the date in which the price was observed"
+        }
+      }
+    },
+    "Notification": {
+      "type": "object",
+      "required": [
+        "title",
+        "body",
+        "icon"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "title of notification"
+        },
+        "body": {
+          "type": "string",
+          "description": "body of notification"
+        },
+        "icon": {
+          "type": "string",
+          "description": "icon of notification"
+        }
+      }
+    },
+    "PricesData": {
+      "type": "object",
+      "required":[
+        "crypto",
+        "buy",
+        "sell"
+      ],
+      "properties":{
+        "crypto":{
+          "type": "string",
+          "description": "crypto-currency of the price data",
+          "enum": [
+            "BTC",
+            "ETH",
+            "BNB",
+            "SOL",
+            "DOGE",
+            "XRP",
+            "DOT",
+            "AVAX",
+            "LTC",
+            "LUNA"
+          ]
+        },
+        "buy":{
+          "type": "array",
+          "description": "prices entries for buying",
+          "items":{
+            "$ref": "#/definitions/Price"
+          }
+        },
+        "sell":{
+          "type": "array",
+          "description": "prices entries for selling",
+          "items":{
+            "$ref": "#/definitions/Price"
+          }
+        }
+      }
+    }
+  }
+}

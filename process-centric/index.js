@@ -16,12 +16,12 @@ const OPERATIONS = ['buy', 'sell'];
 
 app.use(express.json());
 
-/*
+
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-*/
+
 
 app.post('/notification/crypto/:crypto', (req, res) => {
     if (req.header('Authorization') !== process.env.PROCESS_CENTRIC_KEY) {
@@ -30,30 +30,32 @@ app.post('/notification/crypto/:crypto', (req, res) => {
         const notification = req.body;
         const crypto = req.params.crypto;
         axios.post(process.env.USERS_BUSINESS_LOGIC_HOST + '/devices/notifications/crypto/' + crypto, notification)
-            .catch(e => console.log(e));
+            .then(res.status(200).send({ statusCode: 200, message: 'notification sent' }))
+            .catch(e => {
+                res.status(500).send({ statusCode: 500, message: 'server error' });
+                console.log(e);
+            });
     }
 });
 
-app.get('/exchanges/best', (req, res) => {
-    axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me')
+app.get('/exchange/best/:operation', (req, res) => {
+    const operation = req.params.operation;
+    if(!OPERATIONS.includes(operation)){
+        res.status(404).send({ statusCode: 404, message: 'operation not found' });
+    } else {
+        axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me')
         .then(response => response.data)
         .then(user => {
             var cryptos = user.cryptos;
+            var requests = [];
             cryptos.forEach(crypto => {
-                requests.push(axios.get(process.env.EXCHANGES_BUSINESS_LOGIC_HOST + '/exchange/best/operation/buy/crypto/' + crypto, { headers: { 'Authorization': process.env.EXCHANGES_BUSINESS_LOGIC_KEY } }).then(response => response.data));
-                requests.push(axios.get(process.env.EXCHANGES_BUSINESS_LOGIC_HOST + '/exchange/best/operation/sell/crypto/' + crypto, { headers: { 'Authorization': process.env.EXCHANGES_BUSINESS_LOGIC_KEY } }).then(response => response.data));
+                requests.push(axios.get(process.env.EXCHANGES_BUSINESS_LOGIC_HOST + '/exchange/best/operation/'+operation+'/crypto/' + crypto, { headers: { 'Authorization': process.env.EXCHANGES_BUSINESS_LOGIC_KEY } }).then(response => response.data));
             });
             Promise.all(requests)
                 .then(responses => {
+                    var bestExchanges = [];
                     responses.forEach(response => {
-                        let crypto = response.crypto;
-                        let operation = response.operation;
-
-                        if (!(crypto in bestExchanges)) {
-                            bestExchanges[crypto] = {};
-                        }
-
-                        bestExchanges[crypto][operation] = { exchange: response.exchange, price: response.price };
+                        bestExchanges.push(response);
                     });
                     res.status(200).send(bestExchanges);
                 })
@@ -66,6 +68,7 @@ app.get('/exchanges/best', (req, res) => {
             console.log(e);
             res.status(500).send({ statusCode: 500, message: 'server error' })
         });
+    }
 });
 
 app.get('/price/since/:date', (req, res) => {
@@ -170,11 +173,14 @@ app.get('/price/since/:date', (req, res) => {
                         responses.forEach(response => {
                             allPrices = allPrices.concat(response);
                         });
-                        var userPrices = {};
+                        var userPrices = [];
                         cryptos.forEach(crypto => {
-                            userPrices[crypto] = {};
-                            userPrices[crypto]['buy'] = allPrices.filter(price => price.crypto == crypto && price.operation == 'buy');
-                            userPrices[crypto]['sell'] = allPrices.filter(price => price.crypto == crypto && price.operation == 'sell');
+                            var userPrice = {};
+                            userPrice['crypto'] = crypto;
+                            userPrice['prices'] = {}
+                            userPrice['prices']['buy'] = allPrices.filter(price => price.crypto == crypto && price.operation == 'buy');
+                            userPrice['prices']['sell'] = allPrices.filter(price => price.crypto == crypto && price.operation == 'sell');
+                            userPrices.push(userPrice);
                         });
                         res.status(200).send(userPrices);
                     })
@@ -186,8 +192,7 @@ app.get('/price/since/:date', (req, res) => {
             .catch(e => {
                 console.log(e);
                 res.status(500).send({ statusCode: 500, message: 'server error' });
-            })
-
+            });
     }
 });
 
@@ -198,7 +203,7 @@ app.get('/price/from/:from/to/:to', (req, res) => {
     var to = toVal.toISOString();
     if (isNaN(fromVal) || isNaN(toVal)) {
         res.status(400).send({ statusCode: 400, message: 'invalid date(s)' });
-    } else {         
+    } else {
         axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me')
             .then(response => response.data)
             .then(user => {
@@ -295,11 +300,14 @@ app.get('/price/from/:from/to/:to', (req, res) => {
                         responses.forEach(response => {
                             allPrices = allPrices.concat(response);
                         });
-                        var userPrices = {};
+                        var userPrices = [];
                         cryptos.forEach(crypto => {
-                            userPrices[crypto] = {};
-                            userPrices[crypto]['buy'] = allPrices.filter(price => price.crypto == crypto && price.operation == 'buy');
-                            userPrices[crypto]['sell'] = allPrices.filter(price => price.crypto == crypto && price.operation == 'sell');
+                            var userPrice = {};
+                            userPrice['crypto'] = crypto;
+                            userPrice['prices'] = {}
+                            userPrice['prices']['buy'] = allPrices.filter(price => price.crypto == crypto && price.operation == 'buy');
+                            userPrice['prices']['sell'] = allPrices.filter(price => price.crypto == crypto && price.operation == 'sell');
+                            userPrices.push(userPrice);
                         });
                         res.status(200).send(userPrices);
                     })
@@ -312,7 +320,7 @@ app.get('/price/from/:from/to/:to', (req, res) => {
                 console.log(e);
                 res.status(500).send({ statusCode: 500, message: 'server error' });
             });
-            
+
     }
 });
 

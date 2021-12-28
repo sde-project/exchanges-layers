@@ -25,8 +25,8 @@
           "tags": [
             "exchanges"
           ],
-          "summary": "gets the best exchange to buy or sell a crypto",
-          "description": "gets the best exchange to buy or sell a crypto",
+          "summary": "gets the price entry on the best exchange for the operation on the crypto",
+          "description": "gets the price entry on the best exchange for the operation on the crypto",
           "operationId": "getBest",
           "produces": [
             "application/json"
@@ -71,8 +71,8 @@
             }
           ],
           "responses": {
-            "201": {
-              "description": "price entry added to database",
+            "200": {
+              "description": "price entry on the best exchange for performing operation on crypto",
               "schema": {
                 "$ref": "#/definitions/Price"
               }
