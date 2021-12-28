@@ -29,7 +29,7 @@ app.post('/notification/crypto/:crypto', (req, res) => {
     } else {
         const notification = req.body;
         const crypto = req.params.crypto;
-        axios.post(process.env.USERS_BUSINESS_LOGIC_HOST + '/devices/notifications/crypto/' + crypto, notification)
+        axios.post(process.env.USERS_BUSINESS_LOGIC_HOST + '/devices/notifications/crypto/' + crypto, notification, { headers: { 'api-key': process.env.USERS_BUSINESS_LOGIC_KEY } })
             .then(res.status(200).send({ statusCode: 200, message: 'notification sent' }))
             .catch(e => {
                 res.status(500).send({ statusCode: 500, message: 'server error' });
@@ -43,7 +43,7 @@ app.get('/exchange/best/:operation', (req, res) => {
     if(!OPERATIONS.includes(operation)){
         res.status(404).send({ statusCode: 404, message: 'operation not found' });
     } else {
-        axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me')
+        axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me', { headers: {'Authorization': req.headers.authorization, 'api-key': process.env.USERS_BUSINESS_LOGIC_KEY } })
         .then(response => response.data)
         .then(user => {
             var cryptos = user.cryptos;
@@ -77,7 +77,7 @@ app.get('/price/since/:date', (req, res) => {
     if (isNaN(dateVal)) {
         res.status(400).send({ statusCode: 400, message: 'invalid date' });
     } else {
-        axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me')
+        axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me', { headers: {'Authorization': req.headers.authorization, 'api-key': process.env.USERS_BUSINESS_LOGIC_KEY } })
             .then(response => response.data)
             .then(user => {
                 var cryptos = user.cryptos;
@@ -204,7 +204,7 @@ app.get('/price/from/:from/to/:to', (req, res) => {
     if (isNaN(fromVal) || isNaN(toVal)) {
         res.status(400).send({ statusCode: 400, message: 'invalid date(s)' });
     } else {
-        axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me')
+        axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me', { headers: {'Authorization': req.headers.authorization, 'api-key': process.env.USERS_BUSINESS_LOGIC_KEY } })
             .then(response => response.data)
             .then(user => {
                 var cryptos = user.cryptos;
