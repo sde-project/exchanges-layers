@@ -1,45 +1,46 @@
 version: "3"
 networks:
-  exchanges:
+  sde:
+    external: true
 volumes:
   mongodata:
 services:
-  mongo:
+  mongo-exchanges:
     image: mongo:4.2.18-rc0-bionic
     ports:
       - 27017:27017
     volumes:
       - mongodata:/data/db
     networks:
-      - exchanges
-  data-adapter:
+      - sde
+  data-adapter-exchanges:
     build: ./data-adapter
     depends_on: 
-      - mongo
+      - mongo-exchanges
     ports:
       - 2901:2901
     networks:
-      - exchanges
-  exchanges-adapter:
+      - sde
+  exchanges-adapter-exchanges:
     build: ./exchanges-adapter
     depends_on:
-      - data-adapter
+      - data-adapter-exchanges
     networks:
-      - exchanges
-  business-logic:
+      - sde
+  business-logic-exchanges:
     build: ./business-logic
     depends_on:
-      - data-adapter
+      - data-adapter-exchanges
     ports:
       - 2902:2902
     networks:
-      - exchanges
-  process-centric:
+      - sde
+  process-centric-exchanges:
     build: ./process-centric
     depends_on:
-      - data-adapter
-      - business-logic
+      - data-adapter-exchanges
+      - business-logic-exchanges
     ports:
       - 2900:2900
     networks:
-      - exchanges
+      - sde
