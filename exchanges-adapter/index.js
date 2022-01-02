@@ -251,7 +251,7 @@ function getAllPrices() {
     getAllSellPrices();
 }
 
-const TIMER = process.env.TIMER || 1 * 60 * 1000;
+const TIMER = process.env.TIMER || 5 * 60 * 1000;
 
 // get crypto prices every 5 minute
 setInterval(getAllPrices, TIMER);

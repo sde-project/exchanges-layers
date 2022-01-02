@@ -346,7 +346,7 @@ function analyzeAllPeaks() {
     });
 }
 
-const TIMER = process.env.TIMER || 1 * 60 * 1000;
+const TIMER = process.env.TIMER || 5 * 60 * 1000;
 
 setInterval(analyzeAllPeaks, TIMER);
 
