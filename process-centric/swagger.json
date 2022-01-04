@@ -28,7 +28,7 @@
     "http"
   ],
   "paths": {
-    "/notification/crypto/{crypto}": {
+    "/exchanges/notification/crypto/{crypto}": {
       "post": {
         "tags": [
           "notifications"
@@ -92,7 +92,7 @@
         }
       }
     },
-    "/exchange/best/{operation}": {
+    "/exchanges/best/{operation}": {
       "get": {
         "tags": [
           "exchanges"
@@ -135,7 +135,7 @@
         }
       }
     },
-    "/price/since/{date}": {
+    "/exchanges/price/since/{date}": {
       "get": {
         "tags": [
           "prices"
@@ -178,7 +178,7 @@
         }
       }
     },
-    "/price/from/{from}/to/{to}": {
+    "/exchanges/price/from/{from}/to/{to}": {
       "get": {
         "tags": [
           "prices"

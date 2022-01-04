@@ -20,10 +20,10 @@ app.use(express.json());
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/exchanges/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
-app.post('/notification/crypto/:crypto', (req, res) => {
+app.post('/exchanges/notification/crypto/:crypto', (req, res) => {
     if (req.header('Authorization') !== process.env.PROCESS_CENTRIC_KEY) {
         return res.status(401).send({ statusCode: 401, message: "unauthorized" });
     } else {
@@ -38,7 +38,7 @@ app.post('/notification/crypto/:crypto', (req, res) => {
     }
 });
 
-app.get('/exchange/best/:operation', (req, res) => {
+app.get('/exchanges/best/:operation', (req, res) => {
     const operation = req.params.operation;
     if(!OPERATIONS.includes(operation)){
         res.status(404).send({ statusCode: 404, message: 'operation not found' });
@@ -71,7 +71,7 @@ app.get('/exchange/best/:operation', (req, res) => {
     }
 });
 
-app.get('/price/since/:date', (req, res) => {
+app.get('/exchanges/price/since/:date', (req, res) => {
     var dateVal = new Date(Date.parse(req.params.date));
     var date = dateVal.toISOString();
     if (isNaN(dateVal)) {
@@ -196,7 +196,7 @@ app.get('/price/since/:date', (req, res) => {
     }
 });
 
-app.get('/price/from/:from/to/:to', (req, res) => {
+app.get('/exchanges/price/from/:from/to/:to', (req, res) => {
     var fromVal = new Date(Date.parse(req.params.from));
     var from = fromVal.toISOString();
     var toVal = new Date(Date.parse(req.params.to));

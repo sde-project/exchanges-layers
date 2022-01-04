@@ -2,8 +2,11 @@ version: "3"
 networks:
   sde:
     external: true
+
 volumes:
   mongodata:
+    external: true
+
 services:
   mongo-exchanges:
     image: mongo:4.2.18-rc0-bionic
@@ -41,6 +44,6 @@ services:
       - data-adapter-exchanges
       - business-logic-exchanges
     ports:
-      - 2900:2900
+      - 2900:8000
     networks:
       - sde

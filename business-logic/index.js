@@ -271,7 +271,7 @@ function analyzePeak(crypto, operation, exchange) {
                     const notification = new Notification(title, body, icon);
 
                     axios.post(
-                        process.env.PROCESS_CENTRIC_HOST + '/notification/crypto/' + crypto,
+                        process.env.PROCESS_CENTRIC_HOST + '/exchanges/notification/crypto/' + crypto,
                         notification,
                         { headers: { 'Authorization': process.env.PROCESS_CENTRIC_KEY } }
                     )
@@ -289,7 +289,7 @@ function analyzePeak(crypto, operation, exchange) {
                     const notification = new Notification(title, body, icon);
 
                     axios.post(
-                        process.env.PROCESS_CENTRIC_HOST + '/notification/crypto/' + crypto,
+                        process.env.PROCESS_CENTRIC_HOST + '/exchanges/notification/crypto/' + crypto,
                         notification,
                         { headers: { 'Authorization': process.env.PROCESS_CENTRIC_KEY } }
                     )
