@@ -130,7 +130,32 @@
             "description": "operation not found"
           },
           "500": {
-            "description": "server error on saving the price entry"
+            "description": "server error on getting the best exchanges"
+          }
+        }
+      }
+    },
+    "/exchanges/best/all": {
+      "get": {
+        "tags": [
+          "exchanges"
+        ],
+        "summary": "gets the price entries on the best exchange for buying/selling all the available cryptos",
+        "description": "gets the price entries on the best exchange for buying/selling all the available cryptos",
+        "operationId": "getBestAll",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "price entries on the best exchanges for performing operation on cryptos",
+            "schema": {
+              "$ref": "#/definitions/BestExchanges"
+            }
+          },
+          "500": {
+            "description": "server error on getting the best exchanges"
           }
         }
       }
@@ -310,15 +335,185 @@
         }
       }
     },
+    "BestExchanges": {
+      "type": "object",
+      "required": [
+        "BTC",
+        "ETH",
+        "BNB",
+        "SOL",
+        "DOGE",
+        "XRP",
+        "DOT",
+        "AVAX",
+        "LTC",
+        "LUNA"
+      ],
+      "properties": {
+        "BTC": {
+          "type": "object",
+          "required": [
+            "buy",
+            "sell"
+          ],
+          "properties": {
+            "buy": {
+                "$ref": "#/definitions/Price"
+              
+            },
+            "sell": {
+                "$ref": "#/definitions/Price"
+              
+            }
+          }
+        },
+        "ETH": {
+          "type": "object",
+          "required": [
+            "buy",
+            "sell"
+          ],
+          "properties": {
+            "buy": {
+                "$ref": "#/definitions/Price"
+              
+            },
+            "sell": {
+                "$ref": "#/definitions/Price"
+              
+            }
+          }
+        },
+        "DOGE": {
+          "type": "object",
+          "required": [
+            "buy",
+            "sell"
+          ],
+          "properties": {
+            "buy": {
+                "$ref": "#/definitions/Price"
+              
+            },
+            "sell": {
+                "$ref": "#/definitions/Price"
+              
+            }
+          }
+        },
+        "LTC": {
+          "type": "object",
+          "required": [
+            "buy",
+            "sell"
+          ],
+          "properties": {
+            "buy": {
+                "$ref": "#/definitions/Price"
+              
+            },
+            "sell": {
+                "$ref": "#/definitions/Price"
+              
+            }
+          }
+        },
+        "AVAX": {
+          "type": "object",
+          "required": [
+            "buy",
+            "sell"
+          ],
+          "properties": {
+            "buy": {
+                "$ref": "#/definitions/Price"
+              
+            },
+            "sell": {
+                "$ref": "#/definitions/Price"
+              
+            }
+          }
+        },
+        "DOT": {
+          "type": "object",
+          "required": [
+            "buy",
+            "sell"
+          ],
+          "properties": {
+            "buy": {
+                "$ref": "#/definitions/Price"
+              
+            },
+            "sell": {
+                "$ref": "#/definitions/Price"
+              
+            }
+          }
+        },
+        "XRP": {
+          "type": "object",
+          "required": [
+            "buy",
+            "sell"
+          ],
+          "properties": {
+            "buy": {
+                "$ref": "#/definitions/Price"
+              
+            },
+            "sell": {
+                "$ref": "#/definitions/Price"
+              
+            }
+          }
+        },
+        "LUNA": {
+          "type": "object",
+          "required": [
+            "buy",
+            "sell"
+          ],
+          "properties": {
+            "buy": {
+                "$ref": "#/definitions/Price"
+              
+            },
+            "sell": {
+                "$ref": "#/definitions/Price"
+              
+            }
+          }
+        },
+        "SOL": {
+          "type": "object",
+          "required": [
+            "buy",
+            "sell"
+          ],
+          "properties": {
+            "buy": {
+                "$ref": "#/definitions/Price"
+              
+            },
+            "sell": {
+                "$ref": "#/definitions/Price"
+              
+            }
+          }
+        }
+      }
+    },
     "PricesData": {
       "type": "object",
-      "required":[
+      "required": [
         "crypto",
         "buy",
         "sell"
       ],
-      "properties":{
-        "crypto":{
+      "properties": {
+        "crypto": {
           "type": "string",
           "description": "crypto-currency of the price data",
           "enum": [
@@ -334,17 +529,17 @@
             "LUNA"
           ]
         },
-        "buy":{
+        "buy": {
           "type": "array",
           "description": "prices entries for buying",
-          "items":{
+          "items": {
             "$ref": "#/definitions/Price"
           }
         },
-        "sell":{
+        "sell": {
           "type": "array",
           "description": "prices entries for selling",
-          "items":{
+          "items": {
             "$ref": "#/definitions/Price"
           }
         }

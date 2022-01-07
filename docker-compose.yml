@@ -10,6 +10,9 @@ volumes:
 services:
   mongo-exchanges:
     image: mongo:4.2.18-rc0-bionic
+    logging:
+      driver: none
+    restart: on-failure
     ports:
       - 27017:27017
     volumes:
@@ -18,6 +21,7 @@ services:
       - sde
   data-adapter-exchanges:
     build: ./data-adapter
+    restart: on-failure
     depends_on: 
       - mongo-exchanges
     ports:
@@ -26,12 +30,14 @@ services:
       - sde
   exchanges-adapter-exchanges:
     build: ./exchanges-adapter
+    restart: on-failure
     depends_on:
       - data-adapter-exchanges
     networks:
       - sde
   business-logic-exchanges:
     build: ./business-logic
+    restart: on-failure
     depends_on:
       - data-adapter-exchanges
     ports:
@@ -40,6 +46,7 @@ services:
       - sde
   process-centric-exchanges:
     build: ./process-centric
+    restart: on-failure
     depends_on:
       - data-adapter-exchanges
       - business-logic-exchanges

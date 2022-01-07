@@ -45,6 +45,7 @@ app.post('/price', (req, res) => {
                 res.status(201).send({ statusCode: 201, message: "price saved succesfully" });
             })
             .catch(err => {
+                console.log('error in saving price to db');
                 console.log(err);
                 res.status(500).send({ statusCode: 500, message: "error in saving price" });
             })
@@ -64,6 +65,12 @@ function isValidPrice(price) {
     if (price.operation == undefined | price.operation == null | !OPERATIONS.includes(price.operation)) {
         res = false;
     }
+
+    if (!res) {
+        console.log('received invalid price:');
+        console.log(price);
+    }
+
     return res;
 }
 

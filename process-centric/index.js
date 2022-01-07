@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 
-const PORT = process.env.PORT || 2900;
+const PORT = process.env.PORT || 8000;
 
 const axios = require('axios');
 
@@ -24,50 +24,93 @@ app.use('/exchanges/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument)
 
 
 app.post('/exchanges/notification/crypto/:crypto', (req, res) => {
-    if (req.header('Authorization') !== process.env.PROCESS_CENTRIC_KEY) {
-        return res.status(401).send({ statusCode: 401, message: "unauthorized" });
+    if (req.header('Authorization') != process.env.PROCESS_CENTRIC_KEY) {
+        res.status(401).send({ statusCode: 401, message: "unauthorized" });
     } else {
         const notification = req.body;
+        var not = {
+            'notification': {
+                'title': notification.title,
+                'body': notification.body,
+                'icon': ''
+            }
+        };
         const crypto = req.params.crypto;
-        axios.post(process.env.USERS_BUSINESS_LOGIC_HOST + '/devices/notifications/crypto/' + crypto, notification, { headers: { 'api-key': process.env.USERS_BUSINESS_LOGIC_KEY } })
-            .then(res.status(200).send({ statusCode: 200, message: 'notification sent' }))
+        console.log('posting notification: ' + not.notification.title + ', '+not.notification.body);
+        axios.post(process.env.USERS_BUSINESS_LOGIC_HOST + '/devices/notifications/crypto/' + crypto, not, { headers: { 'api-key': process.env.USERS_BUSINESS_LOGIC_KEY } })
+            .then(response => res.status(200).send({ statusCode: 200, message: 'notification sent' }))
             .catch(e => {
-                res.status(500).send({ statusCode: 500, message: 'server error' });
                 console.log(e);
+                res.status(500).send({ statusCode: 500, message: 'server error' });
             });
     }
 });
 
+app.get('/exchanges/best/all', (req, res) => {
+    var bestExchanges = {};
+    var requests = [];
+    CRYPTOS.forEach(crypto => {
+        requests.push(axios.get(process.env.EXCHANGES_BUSINESS_LOGIC_HOST + '/exchange/best/operation/buy/crypto/' + crypto, { headers: { 'Authorization': process.env.EXCHANGES_BUSINESS_LOGIC_KEY } })
+            .then(response => response.data));
+        requests.push(axios.get(process.env.EXCHANGES_BUSINESS_LOGIC_HOST + '/exchange/best/operation/sell/crypto/' + crypto, { headers: { 'Authorization': process.env.EXCHANGES_BUSINESS_LOGIC_KEY } })
+            .then(response => response.data));
+    });
+    Promise.all(requests)
+        .then(responses => {
+            var allPrices = [];
+            responses.forEach(resp => {
+                allPrices.push(resp);
+            });
+            CRYPTOS.forEach(crypto => {
+                var pricesCrypto = allPrices.filter(price => price.crypto == crypto);
+                bestExchanges[crypto] = {};
+                pricesCrypto.forEach(price => {
+                    if (price.operation == 'buy') {
+                        bestExchanges[crypto]['buy'] = price;
+                    } else {
+                        bestExchanges[crypto]['sell'] = price;
+                    }
+                });
+            });
+            res.status(200).send(bestExchanges);
+        })
+        .catch(err => {
+            console.log('error computing all best exchanges');
+            console.log(err);
+            res.status(500).send({ statusCode: 500, message: 'server error' });
+        });
+});
+
 app.get('/exchanges/best/:operation', (req, res) => {
     const operation = req.params.operation;
-    if(!OPERATIONS.includes(operation)){
+    if (!OPERATIONS.includes(operation)) {
         res.status(404).send({ statusCode: 404, message: 'operation not found' });
     } else {
-        axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me', { headers: {'Authorization': req.headers.authorization, 'api-key': process.env.USERS_BUSINESS_LOGIC_KEY } })
-        .then(response => response.data)
-        .then(user => {
-            var cryptos = user.cryptos;
-            var requests = [];
-            cryptos.forEach(crypto => {
-                requests.push(axios.get(process.env.EXCHANGES_BUSINESS_LOGIC_HOST + '/exchange/best/operation/'+operation+'/crypto/' + crypto, { headers: { 'Authorization': process.env.EXCHANGES_BUSINESS_LOGIC_KEY } }).then(response => response.data));
-            });
-            Promise.all(requests)
-                .then(responses => {
-                    var bestExchanges = [];
-                    responses.forEach(response => {
-                        bestExchanges.push(response);
-                    });
-                    res.status(200).send(bestExchanges);
-                })
-                .catch(e => {
-                    console.log(e);
-                    res.status(500).send({ statusCode: 500, message: "server error" });
+        axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me', { headers: { 'Authorization': req.headers.authorization, 'api-key': process.env.USERS_BUSINESS_LOGIC_KEY } })
+            .then(response => response.data)
+            .then(user => {
+                var cryptos = user.cryptos;
+                var requests = [];
+                cryptos.forEach(crypto => {
+                    requests.push(axios.get(process.env.EXCHANGES_BUSINESS_LOGIC_HOST + '/exchange/best/operation/' + operation + '/crypto/' + crypto, { headers: { 'Authorization': process.env.EXCHANGES_BUSINESS_LOGIC_KEY } }).then(response => response.data));
                 });
-        })
-        .catch(e => {
-            console.log(e);
-            res.status(500).send({ statusCode: 500, message: 'server error' })
-        });
+                Promise.all(requests)
+                    .then(responses => {
+                        var bestExchanges = [];
+                        responses.forEach(response => {
+                            bestExchanges.push(response);
+                        });
+                        res.status(200).send(bestExchanges);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        res.status(500).send({ statusCode: 500, message: "server error" });
+                    });
+            })
+            .catch(e => {
+                console.log(e);
+                res.status(500).send({ statusCode: 500, message: 'server error' })
+            });
     }
 });
 
@@ -77,7 +120,7 @@ app.get('/exchanges/price/since/:date', (req, res) => {
     if (isNaN(dateVal)) {
         res.status(400).send({ statusCode: 400, message: 'invalid date' });
     } else {
-        axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me', { headers: {'Authorization': req.headers.authorization, 'api-key': process.env.USERS_BUSINESS_LOGIC_KEY } })
+        axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me', { headers: { 'Authorization': req.headers.authorization, 'api-key': process.env.USERS_BUSINESS_LOGIC_KEY } })
             .then(response => response.data)
             .then(user => {
                 var cryptos = user.cryptos;
@@ -204,7 +247,7 @@ app.get('/exchanges/price/from/:from/to/:to', (req, res) => {
     if (isNaN(fromVal) || isNaN(toVal)) {
         res.status(400).send({ statusCode: 400, message: 'invalid date(s)' });
     } else {
-        axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me', { headers: {'Authorization': req.headers.authorization, 'api-key': process.env.USERS_BUSINESS_LOGIC_KEY } })
+        axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me', { headers: { 'Authorization': req.headers.authorization, 'api-key': process.env.USERS_BUSINESS_LOGIC_KEY } })
             .then(response => response.data)
             .then(user => {
                 var cryptos = user.cryptos;
