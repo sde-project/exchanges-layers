@@ -34,15 +34,15 @@ function getBuyPrices(crypto) {
                     //console.log('-> got buy price on ftx for ' + crypto + ' at ' + ftxPrice.price + '$');
                     //console.log('-> got buy price on crypto for ' + crypto + ' at ' + cryptoPrice.price + '$');
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', krakenPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving buy price for '+ crypto + ' on kraken'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving buy price for '+ crypto + ' on binance'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', coinbasePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving buy price for '+ crypto + ' on coinbase'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving buy price for '+ crypto + ' on ftx'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving buy price for '+ crypto + ' on crypto.com'));
                 });
             break;
         case 'BNB':
@@ -54,9 +54,9 @@ function getBuyPrices(crypto) {
                     //console.log('-> got buy price on binance for ' + crypto + ' at ' + binancePrice.price + '$');
                     //console.log('-> got buy price on ftx for ' + crypto + ' at ' + ftxPrice.price + '$');
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving buy price for '+ crypto + ' on binance'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving buy price for '+ crypto + ' on ftx'));
                 });
             break;
         case 'XRP':
@@ -72,13 +72,13 @@ function getBuyPrices(crypto) {
                     //console.log('-> got buy price on ftx for ' + crypto + ' at ' + ftxPrice.price + '$');
                     //console.log('-> got buy price on crypto for ' + crypto + ' at ' + cryptoPrice.price + '$');
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', krakenPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving buy price for '+ crypto + ' on kraken'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving buy price for '+ crypto + ' on binance'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving buy price for '+ crypto + ' on ftx'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving buy price for '+ crypto + ' on crypto.com'));
                 });
             break;
         case 'AVAX':
@@ -94,13 +94,13 @@ function getBuyPrices(crypto) {
                     //console.log('-> got buy price on ftx for ' + crypto + ' at ' + ftxPrice.price + '$');
                     //console.log('-> got buy price on crypto for ' + crypto + ' at ' + cryptoPrice.price + '$');
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving buy price for '+ crypto + ' on binance'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', coinbasePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving buy price for '+ crypto + ' on coinbase'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving buy price for '+ crypto + ' on ftx'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving buy price for '+ crypto + ' on crypto.com'));
                 });
             break;
         case 'LUNA':
@@ -112,9 +112,9 @@ function getBuyPrices(crypto) {
                     //console.log('-> got buy price on binance for ' + crypto + ' at ' + binancePrice.price + '$');
                     //console.log('-> got buy price on crypto for ' + crypto + ' at ' + cryptoPrice.price + '$');
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving buy price for '+ crypto + ' on binance'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving buy price for '+ crypto + ' on crypto.com'));
                 });
             break;
         default:
@@ -144,15 +144,15 @@ function getSellPrices(crypto) {
                     //console.log('-> got sell price on ftx for ' + crypto + ' at ' + ftxPrice.price + '$');
                     //console.log('-> got sell price on crypto for ' + crypto + ' at ' + cryptoPrice.price + '$');
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', krakenPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving sell price for '+ crypto + ' on kraken'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving sell price for '+ crypto + ' on binance'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', coinbasePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving sell price for '+ crypto + ' on coinbase'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving sell price for '+ crypto + ' on ftx'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving sell price for '+ crypto + ' on crypto.com'));
                 });
             break;
         case 'BNB':
@@ -164,9 +164,9 @@ function getSellPrices(crypto) {
                     //console.log('-> got sell price on binance for ' + crypto + ' at ' + binancePrice.price + '$');
                     //console.log('-> got sell price on ftx for ' + crypto + ' at ' + ftxPrice.price + '$');
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving sell price for '+ crypto + ' on binance'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving sell price for '+ crypto + ' on ftx'));
                 });
             break;
         case 'XRP':
@@ -182,13 +182,13 @@ function getSellPrices(crypto) {
                     //console.log('-> got sell price on ftx for ' + crypto + ' at ' + ftxPrice.price + '$');
                     //console.log('-> got sell price on crypto for ' + crypto + ' at ' + cryptoPrice.price + '$');
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', krakenPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving sell price for '+ crypto + ' on kraken'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving sell price for '+ crypto + ' on binance'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving sell price for '+ crypto + ' on ftx'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving sell price for '+ crypto + ' on crypto.com'));
                 });
             break;
         case 'AVAX':
@@ -204,13 +204,13 @@ function getSellPrices(crypto) {
                     //console.log('-> got sell price on ftx for ' + crypto + ' at ' + ftxPrice.price + '$');
                     //console.log('-> got sell price on crypto for ' + crypto + ' at ' + cryptoPrice.price + '$');
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving sell price for '+ crypto + ' on binance'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', coinbasePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving sell price for '+ crypto + ' on coinbase'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', ftxPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving sell price for '+ crypto + ' on ftx'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving sell price for '+ crypto + ' on crypto.com'));
                 });
             break;
         case 'LUNA':
@@ -222,9 +222,9 @@ function getSellPrices(crypto) {
                     //console.log('-> got sell price on binance for ' + crypto + ' at ' + binancePrice.price + '$');
                     //console.log('-> got sell price on crypto for ' + crypto + ' at ' + cryptoPrice.price + '$');
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', binancePrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving sell price for '+ crypto + ' on binance'));
                     axios.post(process.env.DATA_ADAPTER_HOST + '/price', cryptoPrice, { headers: { 'Authorization': process.env.DATA_ADAPTER_KEY } })
-                        .catch(e => console.log(e));
+                        .catch(e => console.log('error saving sell price for '+ crypto + ' on crypto.com'));
                 });
             break;
         default:

@@ -47,6 +47,7 @@ app.post('/exchanges/notification/crypto/:crypto', (req, res) => {
 });
 
 app.get('/exchanges/best/all', (req, res) => {
+    console.log('computing all best exchanges');
     var bestExchanges = {};
     var requests = [];
     CRYPTOS.forEach(crypto => {
@@ -86,6 +87,7 @@ app.get('/exchanges/best/:operation', (req, res) => {
     if (!OPERATIONS.includes(operation)) {
         res.status(404).send({ statusCode: 404, message: 'operation not found' });
     } else {
+        console.log('computing best exchanges ('+operation+') for user');
         axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me', { headers: { 'Authorization': req.headers.authorization, 'api-key': process.env.USERS_BUSINESS_LOGIC_KEY } })
             .then(response => response.data)
             .then(user => {
@@ -120,6 +122,7 @@ app.get('/exchanges/price/since/:date', (req, res) => {
     if (isNaN(dateVal)) {
         res.status(400).send({ statusCode: 400, message: 'invalid date' });
     } else {
+        console.log('computing prices since '+date+' for user');
         axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me', { headers: { 'Authorization': req.headers.authorization, 'api-key': process.env.USERS_BUSINESS_LOGIC_KEY } })
             .then(response => response.data)
             .then(user => {
@@ -247,6 +250,7 @@ app.get('/exchanges/price/from/:from/to/:to', (req, res) => {
     if (isNaN(fromVal) || isNaN(toVal)) {
         res.status(400).send({ statusCode: 400, message: 'invalid date(s)' });
     } else {
+        console.log('computing prices from '+from+' to '+ to+' for user');
         axios.get(process.env.USERS_BUSINESS_LOGIC_HOST + '/users/me', { headers: { 'Authorization': req.headers.authorization, 'api-key': process.env.USERS_BUSINESS_LOGIC_KEY } })
             .then(response => response.data)
             .then(user => {

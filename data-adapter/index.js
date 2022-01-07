@@ -80,6 +80,7 @@ function isValidPrice(price) {
 app.get('/price/all', (req, res) => {
     Price.find({}).sort('date').exec((err, prices) => {
         if (err) {
+            console.log('db error:');
             console.log(err);
             res.status(500).send({ statusCode: 500, message: 'DB error' });
         } else {
@@ -104,6 +105,7 @@ app.get('/price/crypto/:crypto/since/:date/operation/:operation/exchange/:exchan
     } else {
         Price.find({ 'exchange': exchange, 'crypto': crypto, 'operation': operation, 'date': {$gte: date, $lt: Date.now()+TIME_OFFSET } }).sort('date').exec((err, prices) => {
             if (err) {
+                console.log('db error:');
                 console.log(err);
                 res.status(500).send({ statusCode: 500, message: 'DB error' });
             } else {
@@ -130,6 +132,7 @@ app.get('/price/crypto/:crypto/from/:from/to/:to/operation/:operation/exchange/:
     } else {
         Price.find({ 'exchange': exchange, 'crypto': crypto, 'operation': operation, 'date': {$gte: from, $lt: to } }).sort('date').exec((err, prices) => {
             if (err) {
+                console.log('db error:');
                 console.log(err);
                 res.status(500).send({ statusCode: 500, message: 'DB error' });
             } else {
@@ -152,6 +155,7 @@ app.get('/price/crypto/:crypto/latest/operation/:operation/exchange/:exchange/',
     } else {
         Price.findOne({ 'exchange': exchange, 'crypto': crypto, 'operation': operation }).sort('-date').exec((err, price) => {
             if (err) {
+                console.log('db error:');
                 console.log(err);
                 res.status(500).send({ statusCode: 500, message: 'DB error' });
             } else {
@@ -166,6 +170,7 @@ app.get('/price/since/:date', (req, res) => {
     if (!isNaN(date)) {
         Price.find({ 'date': {$gte: date, $lt: Date.now()+TIME_OFFSET } }).sort('date').exec((err, prices) => {
             if (err) {
+                console.log('db error:');
                 console.log(err);
                 res.status(500).send({ statusCode: 500, message: 'DB error' });
             } else {
@@ -183,6 +188,7 @@ app.get('/price/from/:from/to/:to', (req, res) => {
     if (!isNaN(from) && !isNaN(to)) {
         Price.find({ 'date': {$gte: from, $lt: to } }).sort('date').exec((err, prices) => {
             if (err) {
+                console.log('db error:');
                 console.log(err);
                 res.status(500).send({ statusCode: 500, message: 'DB error' });
             } else {

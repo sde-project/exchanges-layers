@@ -15,7 +15,7 @@ class RequestManager {
             .then(data => new Price('Kraken', crypto, Number(data.result[Object.keys(data.result)].a[0]), 'buy', Date.now()+TIME_OFFSET))
             .catch(error => {
                 console.log('error in getting buy price of ' + crypto + ' from Kraken');
-                console.log(error);
+                // console.log(error);
             });
     }
 
@@ -26,7 +26,7 @@ class RequestManager {
             .then(data => new Price('Binance', crypto, data.price, 'buy', Date.now()+TIME_OFFSET))
             .catch(error => {
                 console.log('error in getting buy price of ' + crypto + ' from Binance');
-                console.log(error);
+                // console.log(error);
             });
     }
 
@@ -37,7 +37,7 @@ class RequestManager {
             .then(data => new Price('Coinbase', crypto, data.data.amount, 'buy', Date.now()+TIME_OFFSET))
             .catch(error => {
                 console.log('error in getting buy price of ' + crypto + ' from Coinbase');
-                console.log(error);
+                // console.log(error);
             });
     }
 
@@ -48,7 +48,7 @@ class RequestManager {
             .then(data => new Price('FTX', crypto, data.result.ask, 'buy', Date.now()+TIME_OFFSET))
             .catch(error => {
                 console.log('error in getting buy price of ' + crypto + ' from FTX');
-                console.log(error.response.data);
+                // console.log(error.response.data);
             });
     }
 
@@ -59,7 +59,7 @@ class RequestManager {
             .then(data => new Price('Crypto.com', crypto, data.result.data.a, 'buy', Date.now()+TIME_OFFSET))
             .catch(error => {
                 console.log('error in getting buy price of ' + crypto + ' from Crypto.com');
-                console.log(error);
+                // console.log(error);
             });
     }
 
@@ -70,7 +70,7 @@ class RequestManager {
             .then(data => new Price('Kraken', crypto, Number(data.result[Object.keys(data.result)].b[0]), 'sell', Date.now()+TIME_OFFSET))
             .catch(error => {
                 console.log('error in getting sell price of ' + crypto + ' from Kraken');
-                console.log(error);
+                // console.log(error);
             });
     }
 
@@ -81,7 +81,7 @@ class RequestManager {
             .then(data => new Price('Binance', crypto, data.price, 'sell', Date.now()+TIME_OFFSET))
             .catch(error => {
                 console.log('error in getting sell price of ' + crypto + ' from Binance');
-                console.log(error);
+                // console.log(error);
             });
     }
 
@@ -92,7 +92,7 @@ class RequestManager {
         .then(data => new Price('Coinbase', crypto, data.data.amount, 'sell', Date.now()+TIME_OFFSET))
         .catch(error => {
             console.log('error in getting sell price of ' + crypto + ' from Coinbase');
-            console.log(error);
+            // console.log(error);
         });
     }
 
@@ -103,7 +103,7 @@ class RequestManager {
         .then(data => new Price('FTX', crypto, data.result.bid, 'sell', Date.now()+TIME_OFFSET))
         .catch(error => {
             console.log('error in getting sell price of ' + crypto + ' from FTX');
-            console.log(error.response.data);
+            // console.log(error.response.data);
         });
     }
 
@@ -114,7 +114,7 @@ class RequestManager {
         .then(data => new Price('Crypto.com', crypto, data.result.data.b, 'sell', Date.now()+TIME_OFFSET))
         .catch(error => {
             console.log('error in getting sell price of ' + crypto + ' from Crypto.com');
-            console.log(error);
+            // console.log(error);
         });
     }
 
