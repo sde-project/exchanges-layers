@@ -358,12 +358,10 @@
           ],
           "properties": {
             "buy": {
-                "$ref": "#/definitions/Price"
-              
+              "$ref": "#/definitions/Price"
             },
             "sell": {
-                "$ref": "#/definitions/Price"
-              
+              "$ref": "#/definitions/Price"
             }
           }
         },
@@ -375,12 +373,10 @@
           ],
           "properties": {
             "buy": {
-                "$ref": "#/definitions/Price"
-              
+              "$ref": "#/definitions/Price"
             },
             "sell": {
-                "$ref": "#/definitions/Price"
-              
+              "$ref": "#/definitions/Price"
             }
           }
         },
@@ -392,12 +388,10 @@
           ],
           "properties": {
             "buy": {
-                "$ref": "#/definitions/Price"
-              
+              "$ref": "#/definitions/Price"
             },
             "sell": {
-                "$ref": "#/definitions/Price"
-              
+              "$ref": "#/definitions/Price"
             }
           }
         },
@@ -409,12 +403,10 @@
           ],
           "properties": {
             "buy": {
-                "$ref": "#/definitions/Price"
-              
+              "$ref": "#/definitions/Price"
             },
             "sell": {
-                "$ref": "#/definitions/Price"
-              
+              "$ref": "#/definitions/Price"
             }
           }
         },
@@ -426,12 +418,10 @@
           ],
           "properties": {
             "buy": {
-                "$ref": "#/definitions/Price"
-              
+              "$ref": "#/definitions/Price"
             },
             "sell": {
-                "$ref": "#/definitions/Price"
-              
+              "$ref": "#/definitions/Price"
             }
           }
         },
@@ -443,12 +433,10 @@
           ],
           "properties": {
             "buy": {
-                "$ref": "#/definitions/Price"
-              
+              "$ref": "#/definitions/Price"
             },
             "sell": {
-                "$ref": "#/definitions/Price"
-              
+              "$ref": "#/definitions/Price"
             }
           }
         },
@@ -460,12 +448,10 @@
           ],
           "properties": {
             "buy": {
-                "$ref": "#/definitions/Price"
-              
+              "$ref": "#/definitions/Price"
             },
             "sell": {
-                "$ref": "#/definitions/Price"
-              
+              "$ref": "#/definitions/Price"
             }
           }
         },
@@ -477,12 +463,10 @@
           ],
           "properties": {
             "buy": {
-                "$ref": "#/definitions/Price"
-              
+              "$ref": "#/definitions/Price"
             },
             "sell": {
-                "$ref": "#/definitions/Price"
-              
+              "$ref": "#/definitions/Price"
             }
           }
         },
@@ -494,12 +478,10 @@
           ],
           "properties": {
             "buy": {
-                "$ref": "#/definitions/Price"
-              
+              "$ref": "#/definitions/Price"
             },
             "sell": {
-                "$ref": "#/definitions/Price"
-              
+              "$ref": "#/definitions/Price"
             }
           }
         }
