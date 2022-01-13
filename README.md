@@ -4,15 +4,17 @@ Module that monitors the prices of various crypto-currencies on various exchange
 
 
 ## Architecture
-
 This module consists of the following layers:
 - **exchanges data service layer**: the public APIs of the monitored exchanges platforms.
-- **exchanges adapter service layer**: requests the prices on the various exchanges and performs marshalling on the data.
-- **exchanges business logic layer**: computes the current best exchange to buy/sell, builds the chart of the historical data of the prices on the exchanges, analyzes the prices for detecting peaks/lows.
-- **exchanges process centric layer**: orchestrates the requests of the whole system depending on the favourite coins of the user.
+- **exchanges adapter service layer**: requests the prices on the various exchanges and performs marshalling on the data for storage in MongoDB.
+- **exchanges business logic layer**: computes the current best exchange to buy/sell and analyzes the prices for detecting peaks/lows.
+- **exchanges process centric layer**: orchestrates the requests of the whole system depending on the favourite coins of the user, exposes data to the front-end and forwards notifications.
 
-## Exchanges APIs
+## Data
+### Crypto-currencies
+This module monitors the following crypto-currencies: BTC, ETH, LTC, SOL, XRP, AVAX, DOGE, BNB, DOT and LUNA.
 
+### Exchanges APIs
 This module currently monitors the following exchanges platfroms through their APIs:
 - **Kraken**: see https://docs.kraken.com/rest/#operation/getTickerInformation, e.g. https://api.kraken.com/0/public/Ticker?pair=BTCUSD
 - **Binance**: see https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#symbol-price-ticker, e.g. https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT
