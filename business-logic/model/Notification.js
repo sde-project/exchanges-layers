@@ -1,8 +1,10 @@
 class Notification {
     constructor(title, body, icon) {
-        this.title = title;
-        this.body = body;
-        this.icon = icon;
+        this.notification = {
+            title: title,
+            body: body,
+            icon: icon
+        }
     }
 }
 

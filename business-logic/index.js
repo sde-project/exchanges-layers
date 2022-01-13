@@ -273,7 +273,7 @@ function analyzePeak(crypto, operation, exchange) {
                     const icon = '';
                     const notification = new Notification(title, body, icon);
 
-                    //console.log('sending notification for high growth of ' + crypto + ' on exchange ' + exchange);
+                    console.log(`sending notification for high growth of ${crypto} on exchange ${exchange}`);
 
                     axios.post(
                         process.env.PROCESS_CENTRIC_HOST + '/exchanges/notification/crypto/' + crypto,
@@ -294,7 +294,7 @@ function analyzePeak(crypto, operation, exchange) {
                     const icon = '';
                     const notification = new Notification(title, body, icon);
 
-                    //console.log('sending notification for high loss of ' + crypto + ' on exchange ' + exchange);
+                    console.log(`sending notification for high loss of ${crypto} on exchange ${exchange}`);
 
                     axios.post(
                         process.env.PROCESS_CENTRIC_HOST + '/exchanges/notification/crypto/' + crypto,

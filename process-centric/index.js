@@ -28,16 +28,9 @@ app.post('/exchanges/notification/crypto/:crypto', (req, res) => {
         res.status(401).send({ statusCode: 401, message: "unauthorized" });
     } else {
         const notification = req.body;
-        var not = {
-            'notification': {
-                'title': notification.title,
-                'body': notification.body,
-                'icon': ''
-            }
-        };
         const crypto = req.params.crypto;
-        console.log('posting notification: ' + not.notification.title + ', '+not.notification.body);
-        axios.post(process.env.USERS_BUSINESS_LOGIC_HOST + '/devices/notifications/crypto/' + crypto, not, { headers: { 'api-key': process.env.USERS_BUSINESS_LOGIC_KEY } })
+        console.log(`posting notification: ${notification.notification.title}, ${notification.notification.body}`);
+        axios.post(process.env.USERS_BUSINESS_LOGIC_HOST + '/devices/notifications/crypto/' + crypto, notification, { headers: { 'api-key': process.env.USERS_BUSINESS_LOGIC_KEY } })
             .then(response => res.status(200).send({ statusCode: 200, message: 'notification sent' }))
             .catch(e => {
                 console.log(e);
