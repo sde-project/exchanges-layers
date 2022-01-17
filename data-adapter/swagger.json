@@ -5,7 +5,8 @@
     "version": "1.0.0",
     "title": "Exchanges Data Adapter",
     "contact": {
-      "email": "eh@volevi.com"
+      "name": "Matteo Zanotto",
+      "email": "matteo.zanotto@studenti.unitn.it"
     }
   },
   "host": "localhost:2901",
